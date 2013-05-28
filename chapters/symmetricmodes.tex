@@ -85,7 +85,7 @@
 \section{Message Authentication}
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
-        It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will worry about \textbf{MAC}
+        It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will worry about \textbf{MAC} as MDC isn't in the exam.
 
 
     \subsection{\textbf{M}essage \textbf{A}uthentication \textbf{C}odes}
@@ -94,3 +94,56 @@
         \centering
         MAC = $h_{k}(m)$
     \end{figure}
+
+    You would then typically send the MAC concatenated at the end of the message. The hash function, as per Kerckhoff's principle, is publicly described. Given \emph{k} and \emph{m}, computing $h_{k}(m)$ should be easy.
+    Given only \emph{m}, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.
+
+    A hash function is simply a surjective mapping from arbritrarily long strings to fixed length hash strings. 
+
+    \subsection{Security Model}
+    Our security models are simple:
+    \begin{itemize}
+        \item \textbf{EF-PASS}: The passive attack where the bad guy can generate a valid MAC for any message, gibberish or otherwise. 
+        `Existential' forgery is where the message may just be random rubbish, `Selective' forgery is creating a MAC for a specific message.
+
+        \item \textbf{EF-CMA}: As above, but the douche of an adversary has an oracle that can perform MAC generation on other messages of his choice (but not the target message). This is the `Chosen Message' Attack
+    \end{itemize}
+
+    We will now look at two games for Existential Forgery; as a MAC may be probabilistic, we define two algorithms for these games:
+
+    \begin{itemize}
+        \item $\textbf{MAC}_{k}(m)$: Generates the MAC for message \emph{m}.
+        \item $V_{k}(m, c)$: A boolean-returning verification function. True is good. False is bad. Get with the program, kids. Also this may not simply be a case of recomputing the MAC; if the algorithm that generates it is probabilistic, we need other methods of checking correctness.
+    \end{itemize}
+
+    It is a given that our opponent has access to a Verification Oracle (otherwise how will they know if they have cracked it?). 
+
+    \begin{figure}[htp!]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \begin{cryptogame}{}
+            \cgameright{$V(m, c)$}
+            \cgameleft{$m^{*}$, $c^{*}$}
+        \end{cryptogame}
+        \caption{EF-PASS: Passive Attack}
+        \label{fig:ef-pass}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \begin{cryptogame}{}
+            \cgameright{$V(m, c)$}
+            \cgameright{$c = MAC_{k}(m)$}
+            \cgameleft{$m^{*}$, $c^{*}$}
+        \end{cryptogame}
+        \caption{EF-CMA: Chosen Message Attack}
+        \label{fig:ef-cma}
+    \end{subfigure}
+    \caption{MAC security games}
+    \label{fig:ef-games}
+\end{figure}
+
+There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.
+
+Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
