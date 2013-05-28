@@ -86,6 +86,7 @@
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
         It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will worry about \textbf{MAC} as MDC isn't in the exam.
+        The reason we use these at all is that they are the secret ingredient in getting from IND-CPA to the mythical, coveted IND-CCA level of security.
 
 
     \subsection{\textbf{M}essage \textbf{A}uthentication \textbf{C}odes}
@@ -144,6 +145,52 @@
     \label{fig:ef-games}
 \end{figure}
 
-There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.
+    There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.
 
-Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
+    Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
+
+\section{IND-CCA Here We Come}
+    \subsection{Making A Scheme}
+    The reason that CBC and CTR modes, whilst groovy, were not \textbf{IND-CCA} was that an attacker could look at our ciphertext and construct a related one which could be decrypted through their oracle, giving them a related plaintext.
+
+    MAC prevents them from doing that! Sweet! So to make an \textbf{IND-CCA} secure scheme you will need:
+    \begin{itemize}
+        \item One \textbf{IND-CPA} secure symmetric cipher \emph{E}.
+        \item One \emph{SECURE}\footnote{i.e. Cannot produce a valid \textbf{MAC} without access to the correct key} \textbf{MAC} function \emph{MAC}.
+        \item One hybrid key consisting of $k_{0}$ and $k_{1}$ which are the keys for \emph{E} and \emph{MAC} respectively.
+    \end{itemize}
+
+    We can then construct encryption and decryption thusly:
+    \begin{figure}[htp!]
+    \centering
+    \raisebox{-0.5\height}{
+        \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \textbf{Encrypt}
+            \begin{enumerate}
+                \item Split $k$ into $k_{0}$ and $k_{1}$
+                \item $c_{0} = E_{k_{0}}(m)$
+                \item $c_{1} = MAC_{k_{1}}(c_{0})$
+                \item And voila: $c = (c_{0}, c_{1})$
+            \end{enumerate}
+            \label{fig:ind-cca-enc}
+        \end{subfigure}
+        }
+    ~
+    \raisebox{-0.5\height}{
+        \begin{subfigure}[b]{0.4\textwidth}
+            \centering
+            \textbf{Decrypt}
+            \begin{enumerate}
+                \item Split $k$ into $k_{0}$ and $k_{1}$
+                \item Split $c$ into $c_{0}$ and $c_{1}$
+                \item $c_{1}^{*} = MAC_{k_{1}}(c_{0})$
+                \item If $c_{1}^{*} \neq c_{1}$ then ABORT and return $\bot$
+                \item Else return $m$ where $m = D_{k_{0}}(c_{0})$ 
+            \end{enumerate}
+            \label{fig:ind-cca-dec}
+        \end{subfigure}
+    }
+    \caption{How To Make an IND-CCA Scheme}
+    \label{fig:ind-cca-ed}
+    \end{figure}
