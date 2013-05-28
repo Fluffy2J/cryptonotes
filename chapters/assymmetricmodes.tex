@@ -1,8 +1,33 @@
-\chaptersub{Assymetric Modes}{Public Key Cryptography}
+\chaptersub{Asymmetric Modes}{Public Key Cryptography}
 
 \section{Introduction}
 
+	The basic concept of public key cryptography is the idea of a box with two keys, a public key, and a private key. The \textbf{public key} allows anyone to \textbf{leave a message}. They cannot however read each others messages. The \textbf{private key} by contrast, allows its owner to \textbf{read any message left}. It is this asymmetry that gives the scheme its name.\\
+	\\
+	Or to put	it more concretely:\\
+	\\
+	\textbf{Message + \textcolor{B}{Public Key} = Ciphertext}\\
+	\textbf{Ciphertext + \textcolor{R}{Private Key} = Message}\\
+
 \section{Vanilla RSA}
+
+	RSA is actually very simple. Lets start with the encryption and decryption definitions, and work back from there.
+
+	$$ c = m^{\textcolor{B}{e}} \bmod \textcolor{B}{N} $$
+
+	$$ m = c^{\textcolor{R}{d}} \bmod \textcolor{B}{N} $$
+	Simple right? $e$, $d$, and $N$ are the only things we need. So now lets cover just what these are.\\
+	\\
+  \begin{tabularx}{\linewidth}{l l X}
+  \textbf{Symbol} & \textbf{Maths}\footnote{Any unfamiliar symbols or functions are described in the Mathematics section.} & \textbf{Notes}\\
+  $\textcolor{B}{N}$ & $\textcolor{B}{N} = \textcolor{R}{p} * \textcolor{R}{q}$ & Where $p$ and $q$ are two massive \textbf{prime} numbers.
+  \\
+  $\textcolor{B}{e}$ & $\gcd(\textcolor{B}{e},\phi(\textcolor{B}{N}))=1$ & A randomly chosen integer, where $1 < \textcolor{B}{e} < \phi(\textcolor{B}{N})$.
+  \\
+  $\textcolor{R}{d}$ & $\textcolor{B}{e}*\textcolor{R}{d} = 1 \mod \phi(\textcolor{B}{N})$ & Computed using the XGCD algorithm.
+  \\
+  \end{tabularx}
+
 
 \section{Signatures}
 
