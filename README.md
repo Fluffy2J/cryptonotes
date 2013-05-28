@@ -1,0 +1,4 @@
+cryptonotes
+===========
+
+Gotta love Crypto.
