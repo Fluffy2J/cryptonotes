@@ -16,7 +16,7 @@
     Where $X$ is any old number and $Z$ is the `Modulus'. Y is the remainder of the integer division of $X$ by $Z$, the result of an operation expressed in many languages (including C) as $X \% Z$. Simples.\\
     \\
     When you are doing modulo maths in crypto, you only really need to remember 1 rule:
-    $$(a+b) (mod N) \equiv \big[(a mod N) + (b mod N)\big] (mod N)$$
+    $$(a+b) \mod N \equiv \big[(a \mod N) + (b \mod N)\big] \mod N$$
     I've used addition when writing that rule down, but it's the same for subtraction and multiplication. The reason for this is that addition and multiplication \textbf{group operations} on the set of modulo remainders. SAY WHAT?\\
     \\
     This leads us nicely onto groups.
