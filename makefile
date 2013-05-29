@@ -1,4 +1,4 @@
-TEX = pdflatex -shell-escape -interaction=nonstopmode -file-line-error
+TEX = pdflatex -halt-on-error -shell-escape -interaction=nonstopmode -file-line-error
 
 .PHONY: all
 
@@ -8,4 +8,4 @@ main.pdf : main.tex
 	$(TEX) main.tex
 
 clean :
-	rm main.pdf
+	rm -f main.pdf
