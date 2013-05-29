@@ -22,7 +22,7 @@
     \\
     The weakness of this mode is in the fact that the blocks of encrypted independently. This is the basis for the two attacks below, but it also means it's susceptible to \textbf{block replay}. That is where an adversary edits a bit knowing how it will affect the decrypted message. If I knew you were sending me some money, and I knew the block containing the amount you were transferring, I could change that block in the hope I would end up with a larger transaction. This could be fixed with a checksum. ECB has one positive that an error in the cipher text will not propagate to other blocks when decrypted.\\
     \\
-    \textbf{Proving a cryptographic system passes a security model is beyond this scope of this course}, but you should be able to give an intuitive reason. It passes OW-CPA because, with only an encryption oracle, you would have to brute-force every possible message to match it with the ciphertext. We can always make $b$ large enough so that this is not possible.\footnote{This might be possible if you knew the context of the message, if you understand what is being sent and the domain of possible values of a block is relatively small. This is simply poor implementation of the encryption, however, and we don't worry about that.}\\
+    \textbf{Proving a cryptographic system passes a security model is beyond this scope of this course}, but you should be able to give an intuitive reason. It passes OW-CPA because, with only an encryption oracle, you would have to brute-force every possible message to match it with the ciphertext. We can always make $b$ large enough so that this is not possible\footnote{This might be possible if you knew the context of the message, if you understand what is being sent and the domain of possible values of a block is relatively small. This is simply poor implementation of the encryption, however, and we don't worry about that.}. Note that all the proofs for block cipher modes assume we are using a `perfect block cipher'.\\
     \\
     \textbf{OW-CCA Example:} We can win an OW-CCA game by kind of cheating in the following way. If we have a decryption oracle, we can decrypt anything that is not the message. Since the blocks are independent, we can simply split the message in half and decrypt both individually and then concatenate the result.\\
     \\
@@ -80,7 +80,29 @@
     
     
     \subsection{Counter Mode}
-    Counter mode is the same as CBC mode, but 
+    Counter mode basically uses a stream cipher to generate a pseudo-random bit-string which can be one-time-padded with message. As Figure~\ref{fig:ctr} shows, generates a $IV$ ($IV \leftarrow \{0,1\}^n$) and increments this by one for every block. The $IV+n$ values are then put through the block cipher to generate the bit-string. In all the material, the $IV$ is refereed to as $ctr$ for this algorithm.\\
+    \begin{figure}[htp!]
+        \centering
+        \includegraphics[width=0.5\textwidth]{img/ctr.png}
+        \caption{Diagram of CTR mode}
+        \label{fig:ctr}
+    \end{figure}
+    \\
+    Formally:
+    \begin{center}
+        \begin{tabular}{lll}
+            \textbf{Encryption:} && \textbf{Decryption:}\\
+            $c_0 = IV$ && $IV = c_0$\\
+            $c_i = Enc_k(IV + i) \oplus m_i$ && $m_i = Enc_k(IV + i) \oplus c_i$
+        \end{tabular}
+    \end{center}
+    CTR mode passes the same security modes as CBC (Figure~\ref{fig:ctr-attacktable}). But it has one positive over CBC: decrypting a block as not dependent on the decryption of the previous block, meaning that we can parallelise decryption (and encryption for that matter).
+    \begin{figure}[htp!]
+        \centering
+        \attacktable{indcpa}
+        \caption{Security of Models CTR}
+        \label{fig:ctr-attacktable}
+    \end{figure}
 
 \section{Message Authentication}
     \subsection{Why Do This}
