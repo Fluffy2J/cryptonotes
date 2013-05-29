@@ -99,6 +99,9 @@
 			$DEM^{-1}(\cc,\ck) = \cm $ \quad if decryption is successful, else $\bot$.
 		\end{center}
 
+	\subsection{Security}
+
+		The standard for KEM-DEM security is the standard IND-CCA crypto game with a slight twist; the adversary is not allowed access to an encryption oracle, only a \textbf{decryption oracle}. Instead, they are given access to a \textbf{decapsulation oracle}, $KEM^{-1}$, allowing them only to decapsulate $\cpk$. In every other respect the crypto game is identical to conventional IND-CCA.
 
 \section{Padding Schemes}
 
