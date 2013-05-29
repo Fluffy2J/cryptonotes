@@ -36,7 +36,7 @@
 \begin{document}
 
 \pagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Cryptography Notes} }
+\lhead{\footnotesize \parbox{11cm}{Cryptography A Notes} }
 \lfoot{\footnotesize \parbox{11cm}{Shared}}
 \cfoot{}
 \rhead{\footnotesize Lecture Notes}
@@ -136,15 +136,29 @@
 \mainmatter
 
 \thispagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Cryptography A} }
-\lfoot{\footnotesize \parbox{11cm}{Vlad Otrocol}}
-\cfoot{}
-\rhead{\footnotesize Lecture Notes}
-\rfoot{\footnotesize Page \thepage\ of \pageref{LastPage}}
 \renewcommand{\headheight}{24pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
 \newcommand{\chaptersub}[2]{\chapter[#1]{#1 \\ \large{\textit{#2}}}}
+
+\newcommand{\cm}{\red{m}}
+\newcommand{\cc}{\blue{c}}
+\newcommand{\cN}{\blue{N}}
+\newcommand{\cp}{\red{p}}
+\newcommand{\cq}{\red{q}}
+\newcommand{\cd}{\red{d}}
+\newcommand{\ce}{\blue{e}}
+\newcommand{\ck}{\red{k}}
+\newcommand{\cpk}{\blue{p}\blue{k}}
+\newcommand{\csk}{\red{s}\red{k}}
+\newcommand{\cK}{\red{k}}
+
+\newcommand{\csubm}[1]{\red{m}_\red{#1}}
+\newcommand{\csubc}[1]{\red{c}_\red{#1}}
+\newcommand{\csubcast}[1]{\red{c}_\red{#1}^\red{*}}
+\newcommand{\ccast}{\red{c}^\red{*}}
+\newcommand{\cmast}{\red{m}^\red{*}}
+\newcommand{\csubk}[1]{\red{k}_\red{#1}}
 
 \input{chapters/introduction.tex}
 

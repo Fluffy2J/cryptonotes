@@ -17,49 +17,49 @@
 
 		RSA is actually very simple. Lets start with the encryption and decryption definitions, and work back from there.
 
-		$$ c = m^{\textcolor{B}{e}} \bmod \textcolor{B}{N} $$
+		$$ \cc = \cm^{\ce} \bmod \cN $$
 
-		$$ m = c^{\textcolor{R}{d}} \bmod \textcolor{B}{N} $$
-		Simple right? $e$, $d$, and $N$ are the only things we need. So now lets cover just what these are.\\
+		$$ \cm = \cc^{\cd} \bmod \cN $$
+		Simple right? $\ce$, $\cd$, and $\cN$ are the only things we need. So now lets cover just what these are.\\
 		\\
 	  \begin{tabularx}{\linewidth}{l l X}
-	  \textbf{Symbol} & \textbf{Maths}\footnote{Any unfamiliar symbols or functions are described in the Mathematics section.} & \textbf{Notes}\\
-	  $\textcolor{B}{N}$ & $\textcolor{B}{N} = \textcolor{R}{p} * \textcolor{R}{q}$ & Where $p$ and $q$ are two massive \textbf{prime} numbers.
-	  \\
-	  $\textcolor{B}{e}$ & $\gcd(\textcolor{B}{e},\phi(\textcolor{B}{N}))=1$ & A randomly chosen integer, where $1 < \textcolor{B}{e} < \phi(\textcolor{B}{N})$.
-	  \\
-	  $\textcolor{R}{d}$ & $\textcolor{B}{e}*\textcolor{R}{d} = 1 \mod \phi(\textcolor{B}{N})$ & Computed using the XGCD algorithm.
-	  \\
+		  \textbf{Symbol} & \textbf{Maths}\footnote{Any unfamiliar symbols or functions are described in the Mathematics section.} & \textbf{Notes}\\
+		  $\textcolor{B}{N}$ & $\cN = \cp * \cq$ & Where $\cp$ and $\cq$ are two massive \textbf{prime} numbers.
+		  \\
+		  $\ce$ & $\gcd(\ce,\phi(\cN))=1$ & A randomly chosen integer, where $1 < \ce < \phi(\cN)$.
+		  \\
+		  $\cd$ & $\ce*\cd = 1 \mod \phi(\cN)$ & Computed using the XGCD algorithm.
+		  \\
 	  \end{tabularx}
 	  
 	It is worth proving that this system works, namely that decrpyting a ciphertext will always result in the original message.
 
 	\vspace{5mm}
 	
-	Let $c = enc(m)$, and let $x = dec(c)$. We intend to prove that $x \cong m \mod N$. The system is obviously correct (and obviously insecure) in the case where $c=m=0$, so suppose this is not the case. We have that
+	Let $\cc = enc(\cm)$, and let $x = dec(\cc)$. We intend to prove that $x \cong \cm \mod \cN$. The system is obviously correct (and obviously insecure) in the case where $\cc=\cm=0$, so suppose this is not the case. We have that
 	
 	\begin{align*}
-	    x &\cong m^{\blue{e}\red{d}} \mod \blue{N}\\
-	    x &\cong m^{\blue{e}\red{d}} \mod \red{p}\\
-	    x &\cong m^{\blue{e}\red{d}} \mod \red{q}
+	    x &\cong \cm^{\ce\cd} \mod \cN\\
+	    x &\cong \cm^{\ce\cd} \mod \cp\\
+	    x &\cong \cm^{\ce\cd} \mod \cq
 	\end{align*}
 	
-	Consider $x \cong m^{\blue{e}\red{d}} \mod \red{p}$. Since $m \neq 0$, we can invoke Fermat's Little Theorem to conclude that
+	Consider $x \cong \cm^{\ce}\cd \mod \cp$. Since $\cm \neq 0$, we can invoke Fermat's Little Theorem to conclude that
 	
 	$$
-	    m^{\blue{e}\red{d}} \cong m^{\blue{e}\red{d} \mod (\red{p}-1)} \mod \red{p}
+	    \cm^{\ce\cd} \cong \cm^{\ce\cd \mod (\cp-1)} \mod \cp
 	$$
 	
-	Since $\blue{e}\red{d} \cong 1 \mod (\red{p}-1)(\red{q}-1)$, we have that, for some integer $k$, $\blue{e}\red{d} = 1 + k(\red{p}-1)(\red{q}-1)$, hence $\blue{e}\red{d} \cong 1 \mod (\red{p}-1)$. Therefore
+	Since $\ce\cd \cong 1 \mod (\cp-1)(\cq-1)$, we have that, for some integer $k$, $\ce\cd = 1 + \ck(\cp-1)(\cq-1)$, hence $\ce\cd \cong 1 \mod (\cp-1)$. Therefore
 	
 	$$
-	    m^{\blue{e}\red{d} \mod (\red{p}-1)}\cong m^1 \mod \red{p}
+	    \cm^{\ce\cd \mod (\cp-1)}\cong \cm^1 \mod \cp
 	$$
 	
-	So $x \cong m \mod \red{p}$. Nearly identical reasoning allows us to conclude that $x \cong m \mod \red{q}$. By the Chinese Remainder Theorem, it must therefore be the case that $x \cong m \mod N$, and hence
+	So $x \cong \cm \mod \cp$. Nearly identical reasoning allows us to conclude that $x \cong \cm \mod \cq$. By the Chinese Remainder Theorem, it must therefore be the case that $x \cong \cm \mod \cN$, and hence
 	
 	$$
-	    dec(enc(m)) \cong m \mod N 
+	    dec(enc(\cm)) \cong \cm \mod \cN 
 	$$
 	
 	\begin{flushright}
@@ -71,11 +71,11 @@
 		\\
 		It is however \textbf{not IND-CPA} secure. This is pretty obvious; the encryption function is deterministic, so when given a ciphertext from a set of two messages, we can simply encrypt one message from the set, and know that if it does not match the ciphertext we received, we must have been sent the other message.\\
 		\\
-		An encryption scheme is considered \textbf{malleable} if given $c_1$, the ciphertext of $m_1$, we can compute another valid ciphertext $c'$, from a message mathematically related to $m_1$. This is indeed the case with RSA, for instance given two ciphertexts $c_1$ and $c_2$, we could compute:
-		$$c_3 = c_1*c_2 \mod N = (m_1 * m_2)^e \mod N$$ 
-		Without ever knowing $m_1$ or $m_2$! This is not a good thing.\footnote{Unless you do Applied Security, in which case this was what you used to perform the RSA-OAEP attack successfully.} Why not? Because if you encrypt the number 100, without knowing that, or the private key, I can create a valid ciphertext for the number 200, simply by encrypting $m = 2$ and multiplying our ciphertexts together, modulo $N$.\\
+		An encryption scheme is considered \textbf{malleable} if given $\csubc{1}$, the ciphertext of $\csubm{1}$, we can compute another valid ciphertext $c'$, from a message mathematically related to $\csubm{1}$. This is indeed the case with RSA, for instance given two ciphertexts $\csubc{1}$ and $\csubc{2}$, we could compute:
+		$$\csubc{3} = \csubc{1}*\csubc{2} \mod N = (\csubm{1} * \csubm{2})^\ce \mod \cN$$ 
+		Without ever knowing $\csubm{1}$ or $\csubm{2}$! This is not a good thing.\footnote{Unless you do Applied Security, in which case this was what you used to perform the RSA-OAEP attack successfully.} Why not? Because if you encrypt the number 100, without knowing that, or the private key, I can create a valid ciphertext for the number 200, simply by encrypting $m = 2$ and multiplying our ciphertexts together, modulo $N$.\\
 		\\
-		Due to this malleability, vanilla RSA is \textbf{not OW-CCA} secure. Recall in a CCA we are allowed to decrypt any ciphertext \textit{besides the target ciphertext}. However, we now know how to manipulate the ciphertext while leaving the original message relatively unharmed. As such, to recover $m$, we simply compute $c' = c*2^e \mod N$, then decrypt $c'$, giving $m' = m * 2$. Recovering $m$ is now trivial.
+		Due to this malleability, vanilla RSA is \textbf{not OW-CCA} secure. Recall in a CCA we are allowed to decrypt any ciphertext \textit{besides the target ciphertext}. However, we now know how to manipulate the ciphertext while leaving the original message relatively unharmed. As such, to recover $\cm$, we simply compute $c' = \cc*2^e \mod N$, then decrypt $c'$, giving $m' = \cm * 2$. Recovering $\cm$ is now trivial.
 
 
 \section{Signatures}
@@ -83,8 +83,22 @@
 
 
 \section{Hybrid Encryption}
+	A hybrid scheme is one which makes use of both symmetric and asymmetric encryption schemes. Generally, an asymmetric system is used to transmit a symmetric key which is then used to send messages.\\
 
-\section{Key Encapsulation}
+	\subsection{Key Encapsulation Mechanism - KEM}
+		Key encapsulation refers to how we use an asymmetric encryption (or public key) scheme to send the key used to send data to a recipient securely. The formal definition is as follows:
+		\begin{center}
+			$KEM(\cpk) = (\cK,\cc)$\\
+			$KEM^{-1}(\cc, \csk) = \cK$ \quad if $\cc$ is an encapsulation of $\cK$, else $\bot$.
+		\end{center}
+
+	\subsection{Data Encapsulation Mechanism - DEM}
+		Data encapsulation refers to how we use a symmetric encryption scheme to send data to a recipient securely. They are generally based on a block cipher since this allows the data to be of variable length. The formal definition is as follows:
+		\begin{center}
+			$DEM(\cm,\cK) = \cc$ \quad where $\cK$ is a key for the symmetric key function.\\
+			$DEM^{-1}(\cc,\ck) = \cm $ \quad if decryption is successful, else $\bot$.
+		\end{center}
+
 
 \section{Padding Schemes}
 
@@ -100,5 +114,27 @@
 
 
 \section{Rabin}
+	Rabin encryption is a public key cryptography scheme that is provably more secure than RSA. Its security is based on the difficulty of the SQROOT problem, which is provably equal in difficulty to the FACTORING problem. By contrast, the RSA problem, while assumed to be hard, has not been proven to be hard.\\
+	\\
+	Our private key is made up of two components, $\textcolor{R}{p}$ and $\textcolor{R}{q}$, two similarly sized prime numbers where $\textcolor{R}{p} = \textcolor{R}{q} = 3 \mod 4$.\footnote{This just makes extracting roots fast, there is no cryptographic need for this.}\\
+	\\
+	Our public key is made up of two components as well, $\textcolor{B}{N} = \textcolor{R}{p}*\textcolor{R}{q}$ and $\textcolor{B}{B}$. $\textcolor{B}{B}$ is a randomly chosen number between $0$ and $\textcolor{B}{N}$\\
+  \begin{figure}[htp!]
+		$$c = m * (m + \textcolor{B}{B}) \mod \textcolor{B}{N}$$
+  \caption{Rabin Encryption Algorithm}
+  \label{fig:rabin-enc}
+  \end{figure}
+
+  \begin{figure}[htp!]
+		$$m = \sqrt{\frac{\textcolor{B}{B}^2}{4}+c} - \frac{\textcolor{B}{B}}{2} \mod \textcolor{B}{N}$$
+  \caption{Rabin Decryption Algorithm}
+  \label{fig:rabin-dec}
+  \end{figure}
+	An interesting property of the Rabin scheme, as seen in Figure~\ref{fig:rabin-dec}, the private key is not strictly speaking needed for decryption, however in reality this is a case of the SQROOT problem; even knowing the contents of the square root, finding the square root is not a trivial task.\\
+	\\
+	This is where the private key comes in. Lets focus on the portion of the equation that is hard to solve:
+	$$t = \frac{\textcolor{B}{B}^2}{4}+c$$
+	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. % TODO: I'm stopping here because at this point I'm lost. - Matt
+
 
 \section{ElGamal}

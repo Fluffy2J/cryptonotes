@@ -42,9 +42,9 @@
     \begin{center}
     \begin{tabular}{lll}
     \textbf{Encryption}:                                        && \textbf{Decryption}\\
-    $c_0 = IV$                                                  && $IV = c_0$\\
-    $c_1 = Enc_k(m_1 \oplus IV)$                                && $m_1 = Dec_k(c_1) \oplus IV$\\
-    $c_i = Enc_k(m_i \oplus c_{i-1}) \textrm{ for } i > 1$      && $m_i = Dec_k(c_i) \oplus c_{i-1} \textrm{ for } i > 1$\\
+    $\csubc{0} = IV$                                                  && $IV = \csubc{0}$\\
+    $\csubc{1} = Enc_\ck(\csubm{1} \oplus IV)$                                && $\csubm{1} = Dec_\ck(c_1) \oplus IV$\\
+    $\csubc{i} = Enc_\ck(\csubm{i} \oplus \csubc{i-1}) \textrm{ for } i > 1$      && $\csubm{i} = Dec_\ck(c_i) \oplus \csubc{i-1} \textrm{ for } i > 1$\\
     \end{tabular}
     \end{center}
     \begin{figure}[htp!]
@@ -92,8 +92,8 @@
     \begin{center}
         \begin{tabular}{lll}
             \textbf{Encryption:} && \textbf{Decryption:}\\
-            $c_0 = IV$ && $IV = c_0$\\
-            $c_i = Enc_k(IV + i) \oplus m_i$ && $m_i = Enc_k(IV + i) \oplus c_i$
+            $\csubc{0} = IV$ && $IV = \csubc{0}$\\
+            $\csubc{i} = Enc_\ck(IV + i) \oplus \csubm{i}$ && $m_i = Enc_\ck(IV + i) \oplus \csubc{i}$
         \end{tabular}
     \end{center}
     CTR mode passes the same security modes as CBC (Figure~\ref{fig:ctr-attacktable}). But it has one positive over CBC: decrypting a block as not dependent on the decryption of the previous block, meaning that we can parallelise decryption (and encryption for that matter).
@@ -115,11 +115,11 @@
     MAC codes are the result of hashing the message, using a hash function that takes a key.
     \begin{figure}[htp!]
         \centering
-        MAC = $h_{k}(m)$
+        MAC = $h_{\ck}(\cm)$
     \end{figure}\\
     \\
-    You would then typically send the MAC concatenated at the end of the message. The hash function, as per Kerckhoff's principle, is publicly described. Given \emph{k} and \emph{m}, computing $h_{k}(m)$ should be easy.
-    Given only \emph{m}, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.\\
+    You would then typically send the MAC concatenated at the end of the message. The hash function, as per Kerckhoff's principle, is publicly described. Given $\ck$ and $\cm$, computing $h_{\ck}(\cm)$ should be easy.
+    Given only $\cm$, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.\\
     \\
     A hash function is simply a surjective mapping from arbritrarily long strings to fixed length hash strings. \\
     \\
@@ -146,8 +146,8 @@
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{}
-            \cgameright{$V(m, c)$}
-            \cgameleft{$m^{*}$, $c^{*}$}
+            \cgameright{$V(\cm, \cc)$}
+            \cgameleft{$\cmast$, $\ccast$}
         \end{cryptogame}
         \caption{EF-PASS: Passive Attack}
         \label{fig:ef-pass}
@@ -156,9 +156,9 @@
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{}
-            \cgameright{$V(m, c)$}
-            \cgameright{$c = MAC_{k}(m)$}
-            \cgameleft{$m^{*}$, $c^{*}$}
+            \cgameright{$V(\cm, \cc)$}
+            \cgameright{$c = MAC_{\ck}(\cm)$}
+            \cgameleft{$\cmast$, $\ccast$}
         \end{cryptogame}
         \caption{EF-CMA: Chosen Message Attack}
         \label{fig:ef-cma}
@@ -167,7 +167,7 @@
     \label{fig:ef-games}
     \end{figure}
 
-    There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.\\
+    There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $\cmast$ can be passed to the oracle, $\ccast$ must not have been returned.\\
     \\
     Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!\\
     \\
@@ -178,7 +178,7 @@
     \begin{itemize}
         \item One \textbf{IND-CPA} secure symmetric cipher \emph{E}.
         \item One \emph{SECURE}\footnote{i.e. Cannot produce a valid \textbf{MAC} without access to the correct key} \textbf{MAC} function \emph{MAC}.
-        \item One hybrid key consisting of $k_{0}$ and $k_{1}$ which are the keys for \emph{E} and \emph{MAC} respectively.
+        \item One hybrid key consisting of $\csubk{0}$ and $\csubk{1}$ which are the keys for \emph{E} and \emph{MAC} respectively.
     \end{itemize}
 
     We can then construct encryption and decryption thusly:
@@ -190,10 +190,10 @@
             \centering
             \textbf{Encrypt}
             \begin{enumerate}
-                \item Split $k$ into $k_{0}$ and $k_{1}$
-                \item $c_{0} = E_{k_{0}}(m)$
-                \item $c_{1} = MAC_{k_{1}}(c_{0})$
-                \item And voila: $c = (c_{0}, c_{1})$
+                \item Split $\ck$ into $\csubk{0}$ and $\csubk{1}$
+                \item $\csubc{0} = E_{\csubk{0}}(m)$
+                \item $\csubc{1} = MAC_{\csubk{1}}(\csubc{0})$
+                \item And voila: $\cc = (\csubc{0}, \csubc{1})$
             \end{enumerate}
             \label{fig:ind-cca-enc}
         \end{subfigure}
@@ -204,11 +204,11 @@
             \centering
             \textbf{Decrypt}
             \begin{enumerate}
-                \item Split $k$ into $k_{0}$ and $k_{1}$
-                \item Split $c$ into $c_{0}$ and $c_{1}$
-                \item $c_{1}^{*} = MAC_{k_{1}}(c_{0})$
-                \item If $c_{1}^{*} \neq c_{1}$ then ABORT and return $\bot$
-                \item Else return $m$ where $m = D_{k_{0}}(c_{0})$ 
+                \item Split $\ck$ into $\csubk{0}$ and $\csubk{1}$
+                \item Split $\cc$ into $\csubc{0}$ and $\csubc{1}$
+                \item $\csubcast{1} = MAC_{\csubk{1}}(\csubc{0})$
+                \item If $\csubcast{1} \neq \csubc{1}$ then ABORT and return $\bot$
+                \item Else return $\cm$ where $\cm = D_{\csubk{0}}(\csubc{0})$ 
             \end{enumerate}
             \label{fig:ind-cca-dec}
         \end{subfigure}
@@ -230,13 +230,13 @@
     \subsection{CBC-MAC}
     CBC-MAC is pretty much a straightforward application of a block cipher (like DES or AES). We just have to add the MAC on after padding the ciphertext.\\
     \\
-    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $m_{1}, m_{2}...m_{q}$, we would do as follows:\\
+    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $\csubm{1}, \csubm{2}...m_{q}$, we would do as follows:\\
     \begin{enumerate}
-        \item Set initial intermediate variables: $I_{1} = m_{1}, O_{1} = e_{k}(I_{1})$
+        \item Set initial intermediate variables: $I_{1} = \csubm{1}, O_{1} = e_{\ck}(I_{1})$
         \item For $i = 2, 3 ... q$:
             \begin{itemize}
-                \item $I_{i} = m_{i} \oplus O_{i - 1}$
-                \item $O_{i} = e_{k}(I_{i})$
+                \item $I_{i} = \csubm{i} \oplus O_{i - 1}$
+                \item $O_{i} = e_{\ck}(I_{i})$
             \end{itemize}
         \item Do any post-processing you want on $O_{q}$.
         \item Truncate if necessary to $m$ bits and serve piping hot.
@@ -250,8 +250,8 @@
     \end{itemize}
     In terms of optional post-processing, there are two specified methods:\\
     \begin{itemize}
-        \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k}(d_{k_{1}}(O_{q})$
-        \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k_{1}}(O_{q})$ 
+        \item Choose another key, $\csubk{1}$, and replace $O_{q}$ with $e_{\ck}(d_{\csubk{1}}(O_{q})$
+        \item Choose another key, $\csubk{1}$, and replace $O_{q}$ with $e_{\ck_{1}}(O_{\cq})$ 
     \end{itemize}
     Either one of those can make it much harder to do a brute force search for $k$. Which is a good thing, young padawan. Oh yes.
 
@@ -262,9 +262,9 @@
     \\
     I know that earlier I talked about hashing with a key, but in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:\\
     \begin{enumerate}
-        \item Preimage Resistance: given $c = h(m)$, hard to find another $m^{'}$ such that $h(m^{'} = c = h(m)$
+        \item Preimage Resistance: given $\cc = h(\cm)$, hard to find another $m^{'}$ such that $h(m^{'} = c = h(\cm)$
         \item 2nd Preimage Resistance: The same as preimage resistance, except that we are also given $m$.
-        \item Collision Resistance: hard to find $m, m^{'} \neq m$ such that $h(m) = h(m^{'}$
+        \item Collision Resistance: hard to find $\cm, m^{'} \neq \cm$ such that $h(\cm) = h(m^{'}$
     \end{enumerate}
     Typical practical choices for a cryptographic hash are the SHA family, or the RIPEMD family.
 
@@ -273,29 +273,29 @@
     Given a hash function, how can we bung a key in there sensibly? There are the simple prefix, suffix and envelope methods, though these are not secure.\\
     
     \begin{itemize}
-        \item With prefixing it is possible to calculate $MAC_{k}(m||m^{'})$ without knowing the key. Simply split your intended message in half, and you're good to go. Exact method not shown in notes.
+        \item With prefixing it is possible to calculate $MAC_{\ck}(\cm||\cm^{'})$ without knowing the key. Simply split your intended message in half, and you're good to go. Exact method not shown in notes.
         \item Suffixing suffers from a weakness that makes it easier to find collisions in the hash function; this can be done offline, as well, so you do not need to send lots of queries to the target. Exact methodology not disclosed in notes.
         \item Envelope method with padding: The reason this isn't secure isn't given in the notes, and I can't find it online. TODO: SOMEONE HELP ME OH GOD PLEASE
     \end{itemize}
     It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):\\
-    $$HMAC_{k}(m) = h(k||p_{1}||h(k||p_{2}||m))$$
+    $$HMAC_{\ck}(\cm) = h(\ck||p_{1}||h(\ck||p_{2}||\cm))$$
     \\
-    Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $k$ to a full block.\\
+    Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $\ck$ to a full block.\\
     \\
     You can use both MDC and MAC for data integrity, with or without confidentiality.\\
     \\
     Without confidentiality:
     \\
     \begin{itemize}
-        \item \textbf{MAC}: compute $MAC_{k}(m)$ and send $m||MAC_{k}(m)$
+        \item \textbf{MAC}: compute $MAC_{\ck}(\cm)$ and send $\cm||MAC_{\ck}(\cm)$
         \item \textbf{MDC}: Send h(m) over a seperate, authenticated channel.
     \end{itemize}
     With confidentiality:\\
     \begin{itemize}
         \item \textbf{MAC}: need two different keys, $k_{1}$ and $k_{2}$
         \begin{itemize}
-            \item $k_{1}$ is for computing $c = e_{k_{1}}(m)$
-            \item $k_{2}$ if for computing $MAC_{k_{2}}(c)$, which you append to $c$ before sending that combined string.
+            \item $\csubk{1}$ is for computing $\cc = e_{\csubk{1}}(\cm)$
+            \item $\csubk{2}$ if for computing $MAC_{\csubk{2}}(\cc)$, which you append to $\cc$ before sending that combined string.
         \end{itemize}
-        \item \textbf{MDC}: we only need one key $k$ for encryption, where we send $c = e_{k}(m||h(m))$, but as we discussed earlier this can be compromised by a man in the middle attack.
+        \item \textbf{MDC}: we only need one key $k$ for encryption, where we send $\cc = e_{\ck}(\cm||h(\cm))$, but as we discussed earlier this can be compromised by a man in the middle attack.
     \end{itemize}

@@ -66,14 +66,14 @@ We can capture a notion of security by a picture representing a game played with
 
 Indistinguishability is measure of security where by an adversary can give you two messages, and if you were to encrypt only one of them, he/she would not be able to know \textbf{which one you have encrypted}.\\
 \\
-Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this for a symmetric cryptographic scheme. $m_0$ and $m_1$ are the two messages the adversary gives you and the $c^*$ is the ciphertext you computed of one of the messages. $b'$ is the answer the adversary gives. Note that $|m_0|=|m_1|$, since a difference in size would give the game away.\\
+Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this for a symmetric cryptographic scheme. $\csubm{0}$ and $\csubm{1}$ are the two messages the adversary gives you and the $\ccast$ is the ciphertext you computed of one of the messages. $b'$ is the answer the adversary gives. Note that $|\csubm{0}|=|\csubm{1}|$, since a difference in size would give the game away.\\
 \begin{figure}[htp!]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{$b\in \{0,1\}$}
-            \cgameleft{$m_0,m_1$}
-            \cgameright{$c^*=\textrm{Enc}_k(m_b)$}
+            \cgameleft{$\csubm{m},\csubm{m}$}
+            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
             \cgameleft{$b'$}
         \end{cryptogame}
         \caption{Symmetric Key  Case}
@@ -83,9 +83,9 @@ Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this fo
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{$b\in \{0,1\}$}
-            \cgameright{$pk$}
-            \cgameleft{$m_0,m_1$}
-            \cgameright{$c^*=\textrm{Enc}_k(m_b)$}
+            \cgameright{$\cpk$}
+            \cgameleft{$\csubm{0},\csubm{1}$}
+            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
             \cgameleft{$b'$}
         \end{cryptogame}
         \caption{Public Key Case}
@@ -107,8 +107,8 @@ One-wayness is the property that an attacker, with only the ciphertext, \textbf{
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
-        \begin{cryptogame}{$m\in \mathbb{P}$}
-            \cgameright{$c^*=\textrm{Enc}_k(m_b)$}
+        \begin{cryptogame}{$\cm\in \mathbb{P}$}
+            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
             \cgameleft{$m'$}
         \end{cryptogame}
         \caption{Symmetric Key  Case}
@@ -118,9 +118,9 @@ One-wayness is the property that an attacker, with only the ciphertext, \textbf{
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{$b\in \{0,1\}$}
-            \cgameright{$pk$}
-            \cgameleft{$m_0,m_1$}
-            \cgameright{$c^*=\textrm{Enc}_k(m_b)$}
+            \cgameright{$\cpk$}
+            \cgameleft{$\csubm{0},\csubm{1}$}
+            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
             \cgameleft{$b'$}
         \end{cryptogame}
         \caption{Public Key Case}
@@ -135,7 +135,7 @@ These attacks also have defined `adversarial powers', where the adversary has ac
 \begin{itemize}
     \item \textbf{Passive Attack}: Has no oracles --- all games above are passive attacks.
     \item \textbf{Chosen Plaintext Attack (CPA)}: The adversary can encrypt any mesage of his/her choosing.
-    \item \textbf{Chosen Ciphertext Attack (CCA)}: The adversary can decrypt any message of his choosing, except he is not allowed to decrypt $c^*$.
+    \item \textbf{Chosen Ciphertext Attack (CCA)}: The adversary can decrypt any message of his choosing, except he is not allowed to decrypt $\ccast$.
 \end{itemize}
 We assume that if an adversary has access to a decryption oracle, then they have access to the encryption one. This is apparently not true for one case we will see later... There is also no notion of a passive attack for public key encryption because the public key (which is used to encrypt) is public, so will always be accessible.
 
@@ -162,11 +162,11 @@ Some attacks are more powerful than others. Figure~\ref{fig:relations} show thes
 The idea behind a stream cipher is to replace the (possibly) huge cipher needed for the Vernam scheme by a pseudo-random sequence which is `seeded` by a key of a more practical size. There's some confusion over whether the term `stream cipher' refers to the algorithm generating the stream or the entire encryption scheme. The term can use both, but the book accompanying the unit recommends you only use it for the algorithm
 \begin{figure}
     %\includegraphic[width=\textwidth]{img/streamchipher.png}
-    \caption{A stream cipher using a DFA where keys determine state update ($k_1$), initial state ($k_2$) and output filter ($k_3$)}
+    \caption{A stream cipher using a DFA where keys determine state update ($\csubk{1}$), initial state ($\csubk{2}$) and output filter ($\csubk{3}$)}
 \end{figure}
 \\
-One model of a stream cipher is of a finite state machine, where the key provides the initial state, variables used to convert a keystream, $k_i$, to the next keystream, $k_{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
+One model of a stream cipher is of a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
 \\
-One source for confusion may come from that fact that the slides use $k_x$ to for both the key values which are inputted into the stream cipher and for the keystream, which is the output of the stream cipher.\\
+One source for confusion may come from that fact that the slides use $\csubk{x}$ to for both the key values which are inputted into the stream cipher and for the keystream, which is the output of the stream cipher.\\
 \\
 Decryption is easy as both sender and receiver use key to generate the keystream of necessary size. This possible because the algorithm is deterministic, which, as meantioned later, is a source of weakness.
