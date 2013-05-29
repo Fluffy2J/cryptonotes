@@ -13,31 +13,60 @@
 
 \section{Vanilla RSA}
 
-	RSA is actually very simple. Lets start with the encryption and decryption definitions, and work back from there.
+	\subsection{Definition}
 
-	$$ c = m^{\textcolor{B}{e}} \bmod \textcolor{B}{N} $$
+		RSA is actually very simple. Lets start with the encryption and decryption definitions, and work back from there.
 
-	$$ m = c^{\textcolor{R}{d}} \bmod \textcolor{B}{N} $$
-	Simple right? $e$, $d$, and $N$ are the only things we need. So now lets cover just what these are.\\
-	\\
-  \begin{tabularx}{\linewidth}{l l X}
-  \textbf{Symbol} & \textbf{Maths}\footnote{Any unfamiliar symbols or functions are described in the Mathematics section.} & \textbf{Notes}\\
-  $\textcolor{B}{N}$ & $\textcolor{B}{N} = \textcolor{R}{p} * \textcolor{R}{q}$ & Where $p$ and $q$ are two massive \textbf{prime} numbers.
-  \\
-  $\textcolor{B}{e}$ & $\gcd(\textcolor{B}{e},\phi(\textcolor{B}{N}))=1$ & A randomly chosen integer, where $1 < \textcolor{B}{e} < \phi(\textcolor{B}{N})$.
-  \\
-  $\textcolor{R}{d}$ & $\textcolor{B}{e}*\textcolor{R}{d} = 1 \mod \phi(\textcolor{B}{N})$ & Computed using the XGCD algorithm.
-  \\
-  \end{tabularx}
+		$$ c = m^{\textcolor{B}{e}} \bmod \textcolor{B}{N} $$
+
+		$$ m = c^{\textcolor{R}{d}} \bmod \textcolor{B}{N} $$
+		Simple right? $e$, $d$, and $N$ are the only things we need. So now lets cover just what these are.\\
+		\\
+	  \begin{tabularx}{\linewidth}{l l X}
+	  \textbf{Symbol} & \textbf{Maths}\footnote{Any unfamiliar symbols or functions are described in the Mathematics section.} & \textbf{Notes}\\
+	  $\textcolor{B}{N}$ & $\textcolor{B}{N} = \textcolor{R}{p} * \textcolor{R}{q}$ & Where $p$ and $q$ are two massive \textbf{prime} numbers.
+	  \\
+	  $\textcolor{B}{e}$ & $\gcd(\textcolor{B}{e},\phi(\textcolor{B}{N}))=1$ & A randomly chosen integer, where $1 < \textcolor{B}{e} < \phi(\textcolor{B}{N})$.
+	  \\
+	  $\textcolor{R}{d}$ & $\textcolor{B}{e}*\textcolor{R}{d} = 1 \mod \phi(\textcolor{B}{N})$ & Computed using the XGCD algorithm.
+	  \\
+	  \end{tabularx}
+	  RSA works thanks entirely to CRT and Fermat's Little Theorem.
+	  % TODO: Explain how better.
+
+	\subsection{Security}
+
+		Vanilla RSA is \textbf{OW-CPA}, which we seem to prove in a tautological sense with a proof along the lines of ``if we could break OW-CPA, we could solve the RSA problem, and since we can't solve the RSA problem, it must be OW-CPA secure''.\footnote{Yes, I think this is madness but its genuinely what the slides seem to say.}\\
+		\\
+		It is however \textbf{not IND-CPA} secure. This is pretty obvious; the encryption function is deterministic, so when given a ciphertext from a set of two messages, we can simply encrypt one message from the set, and know that if it does not match the ciphertext we received, we must have been sent the other message.\\
+		\\
+		An encryption scheme is considered \textbf{malleable} if given $c_1$, the ciphertext of $m_1$, we can compute another valid ciphertext $c'$, from a message mathematically related to $m_1$. This is indeed the case with RSA, for instance given two ciphertexts $c_1$ and $c_2$, we could compute:
+		$$c_3 = c_1*c_2 \mod N = (m_1 * m_2)^e \mod N$$ 
+		Without ever knowing $m_1$ or $m_2$! This is not a good thing.\footnote{Unless you do Applied Security, in which case this was what you used to perform the RSA-OAEP attack successfully.} Why not? Because if you encrypt the number 100, without knowing that, or the private key, I can create a valid ciphertext for the number 200, simply by encrypting $m = 2$ and multiplying our ciphertexts together, modulo $N$.\\
+		\\
+		Due to this malleability, vanilla RSA is \textbf{not OW-CCA} secure. Recall in a CCA we are allowed to decrypt any ciphertext \textit{besides the target ciphertext}. However, we now know how to manipulate the ciphertext while leaving the original message relatively unharmed. As such, to recover $m$, we simply compute $c' = c*2^e \mod N$, then decrypt $c'$, giving $m' = m * 2$. Recovering $m$ is now trivial.
 
 
 \section{Signatures}
+
+
 
 \section{Hybrid Encryption}
 
 \section{Key Encapsulation}
 
 \section{Padding Schemes}
+
+	\subsection{Introduction}
+		A padding scheme in its simplest form is a system to ensure that when our block size does not exactly divide our message, we do not lose data, or gain data that was not in our message (i.e. we are able to distinguish padding from our original message body).\\
+		\\
+		A padding scheme generally uses a block at either the beginning or start of the message to specify the length of the message body, potentially along with additional information, such as a hash to verify message authenticity.
+
+	\subsection{OAEP}
+		Optical Asymmetric Encryption Padding is one such padding scheme. \textit{Incredibly simplified}\footnote{Seriously this is so simplified it is only for ones intuitive understanding of why it is effective} the scheme pads a message with a --- generally SHA1 --- hash of the message body. If after decryption the hash is not correct for this message body, we know the message is invalid. OAEP goes above and beyond this, but that's the gist of it.\\
+		\\
+		When used with RSA, OAEP gives a scheme which is \textbf{IND-CCA} secure.
+
 
 \section{Rabin}
 
