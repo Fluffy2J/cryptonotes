@@ -85,11 +85,11 @@
 \section{Message Authentication}
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
-        It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will worry about \textbf{MAC} as MDC isn't in the exam.
+        It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will mainly worry about \textbf{MAC} stuff.
         The reason we use these at all is that they are the secret ingredient in getting from IND-CPA to the mythical, coveted IND-CCA level of security.
 
 
-    \subsection{\textbf{M}essage \textbf{A}uthentication \textbf{C}odes}
+    \subsection{\textbf{M}essage \textbf{A}uthentication \textbf{C}odes, you say?}
     MAC codes are the result of hashing the message, using a hash function that takes a key.
     \begin{figure}[htp!]
         \centering
@@ -149,8 +149,7 @@
 
     Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
 
-\section{IND-CCA Here We Come}
-    \subsection{Making A Scheme}
+    \subsection{IND-CCA Here We Come}
     The reason that CBC and CTR modes, whilst groovy, were not \textbf{IND-CCA} was that an attacker could look at our ciphertext and construct a related one which could be decrypted through their oracle, giving them a related plaintext.
 
     MAC prevents them from doing that! Sweet! So to make an \textbf{IND-CCA} secure scheme you will need:
@@ -194,3 +193,49 @@
     \caption{How To Make an IND-CCA Scheme}
     \label{fig:ind-cca-ed}
     \end{figure}
+
+    This obviously involves the ciphertext being expanded (more than it might be already) because it includes a MAC. 
+
+    With the MAC allowing us to validate a ciphertext as being `authentic', this type of scheme is often called \emph{`authenticated encryption'}.
+    It is important to realise the \textbf{very important} distinction between this idea, which is that a ciphertext is authentic, and the concept that a ciphertext came from where it was supposed to, which is part of the regular cryptographic definition of `Authenticity'.
+
+    \subsection{How To Make A MAC}
+    There are a few types of MAC schemes, from MACs that are custom made for that specific encryption scheme to MACs that are derived from MDCs (Manipulation Detection Codes).
+
+    The most popular, and exceedingly examinable, variants that we look at are all based on CBC-mode block ciphers. They are covered by various international standards\footnote{Gotta love standards. Thrilling stuff} and are very widely used. We shall refer to schemes like this under the title of CBC-MAC. Like this...
+
+    \subsection{CBC-MAC}
+    CBC-MAC is pretty much a straightforward application of a block cipher (like DES or AES). We just have to add the MAC on after padding the ciphertext.
+
+    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $m_{1}, m_{2}...m_{q}$, we would do as follows:
+    \begin{enumerate}
+        \item Set initial intermediate variables: $I_{1} = m_{1}, O_{1} = e_{k}(I_{1})$
+        \item For $i = 2, 3 ... q$:
+            \begin{itemize}
+                \item $I_{i} = m_{i} \oplus O_{i - 1}$
+                \item $O_{i} = e_{k}(I_{i})$
+            \end{itemize}
+        \item Do any post-processing you want on $O_{q}$.
+        \item Truncate if necessary to $m$ bits and serve piping hot.
+    \end{enumerate}
+
+    In terms of padding the ciphertext, there are 3 schemes suggested in those groovy groovy standards. All of these pad to a whole number of blocks.
+    \begin{itemize}
+        \item Just add zeroes. Easy, right?
+        \item Add a single 1, then trail out with zeroes.
+        \item Pad with zeroes until you get a whole number of blocks, then add a block containing the length of the unpadded message.
+    \end{itemize}
+
+    In terms of optional post-processing, there are two specified methods:
+    \begin{itemize}
+        \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k}(d_{k_{1}}(O_{q})$
+        \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k_{1}}(O_{q})$ 
+    \end{itemize}
+
+    Either one of those can make it much harder to do a brute force search for $k$. Which is a good thing, young padawan. Oh yes.
+
+    \subsection{Hashing}
+    Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.
+
+    Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is an CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash. TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.
+    
