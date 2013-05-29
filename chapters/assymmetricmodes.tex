@@ -31,12 +31,43 @@
 	  $\textcolor{R}{d}$ & $\textcolor{B}{e}*\textcolor{R}{d} = 1 \mod \phi(\textcolor{B}{N})$ & Computed using the XGCD algorithm.
 	  \\
 	  \end{tabularx}
-	  RSA works thanks entirely to CRT and Fermat's Little Theorem.
-	  % TODO: Explain how better.
+	  
+	It is worth proving that this system works, namely that decrpyting a ciphertext will always result in the original message.
 
+	\vspace{5mm}
+	
+	Let $c = enc(m)$, and let $x = dec(c)$. We intend to prove that $x \cong m \mod N$. The system is obviously correct (and obviously insecure) in the case where $c=m=0$, so suppose this is not the case. We have that
+	
+	\begin{align*}
+	    x &\cong m^{\blue{e}\red{d}} \mod \blue{N}\\
+	    x &\cong m^{\blue{e}\red{d}} \mod \red{p}\\
+	    x &\cong m^{\blue{e}\red{d}} \mod \red{q}
+	\end{align*}
+	
+	Consider $x \cong m^{\blue{e}\red{d}} \mod \red{p}$. Since $m \neq 0$, we can invoke Fermat's Little Theorem to conclude that
+	
+	$$
+	    m^{\blue{e}\red{d}} \cong m^{\blue{e}\red{d} \mod (\red{p}-1)} \mod \red{p}
+	$$
+	
+	Since $\blue{e}\red{d} \cong 1 \mod (\red{p}-1)(\red{q}-1)$, we have that, for some integer $k$, $\blue{e}\red{d} = 1 + k(\red{p}-1)(\red{q}-1)$, hence $\blue{e}\red{d} \cong 1 \mod (\red{p}-1)$. Therefore
+	
+	$$
+	    m^{\blue{e}\red{d} \mod (\red{p}-1)}\cong m^1 \mod \red{p}
+	$$
+	
+	So $x \cong m \mod \red{p}$. Nearly identical reasoning allows us to conclude that $x \cong m \mod \red{q}$. By the Chinese Remainder Theorem, it must therefore be the case that $x \cong m \mod N$, and hence
+	
+	$$
+	    dec(enc(m)) \cong m \mod N 
+	$$
+	
+	\begin{flushright}
+	QED
+	\end{flushright}
 	\subsection{Security}
 
-		Vanilla RSA is \textbf{OW-CPA}, which we seem to prove in a tautological sense with a proof along the lines of ``if we could break OW-CPA, we could solve the RSA problem, and since we can't solve the RSA problem, it must be OW-CPA secure''.\footnote{Yes, I think this is madness but its genuinely what the slides seem to say.}\\
+		Vanilla RSA is \textbf{OW-CPA} under the assumption that the RSA problem is hard. If we could easily break vanilla RSA with a \textbf{OW-CPA}, then we could use this attack to easily solve the RSA problem. Since we assumed that we cannot easily solve the RSA problem, it must be the case that we cannot mount a \textbf{OW-CPA} attack against vanilla RSA.\\
 		\\
 		It is however \textbf{not IND-CPA} secure. This is pretty obvious; the encryption function is deterministic, so when given a ciphertext from a set of two messages, we can simply encrypt one message from the set, and know that if it does not match the ciphertext we received, we must have been sent the other message.\\
 		\\
