@@ -31,12 +31,12 @@
     The private key encryption scheme is comprised of three algorithms:
     
     \begin{itemize}
-      \item The key generation algorithm(\textit{Gen}) which is a probabilistic algorithm that outputs a key \textit{K} chosen according to some distribution that is determined by the scheme.
-      \item The encryption algorithm(\textit{Enc}) which takes as input a key \textit{K} and a plaintext message \textit{M} and outputs a cipher text \textit{C}: \begin{math}Enc_K(M) = C;\end{math}
-      \item The decryption algorithm(\textit{Dec}) which takes as input a key \textit{K} and a cipher \textit{C} and outputs the original message \textit{M}: \begin{math}Dec_K(C) = M;\end{math}
+      \item The key generation algorithm(\textit{Gen}) which is a probabilistic algorithm that outputs a key, $\ck$, chosen according to some distribution that is determined by the scheme.
+      \item The encryption algorithm(\textit{Enc}) which takes as input a key $\ck$ and a plaintext message \textit{M} and outputs a cipher text \textit{C}: $Enc_\ck(M) = \cc;$
+      \item The decryption algorithm(\textit{Dec}) which takes as input a key $\ck$ and a cipher \textit{C} and outputs the original message \textit{M}: $Dec_\ck(C) = \cm;$
     \end{itemize}
     
-    Decrypting a cipher text using the appropriate key yields the original message or: $Dec_K(Enc_K(M))=M$.
+    Decrypting a cipher text using the appropriate key yields the original message or: $Dec_\ck(Enc_\ck(\cm))=\cm$.
     \\
     
 % Not sure if this is the best place for this, but it is an important principle, so perhaps...
