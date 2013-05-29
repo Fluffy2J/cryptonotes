@@ -83,8 +83,22 @@
 
 
 \section{Hybrid Encryption}
+	A hybrid scheme is one which makes use of both symmetric and asymmetric encryption schemes. Generally, an asymmetric system is used to transmit a symmetric key which is then used to send messages.\\
 
-\section{Key Encapsulation}
+	\subsection{Key Encapsulation Mechanism - KEM}
+		Key encapsulation refers to how we use an asymmetric encryption (or public key) scheme to send the key used to send data to a recipient securely. The formal definition is as follows:
+		\begin{center}
+			$KEM(\cpk) = (\cK,\cc)$\\
+			$KEM^{-1}(\cc, \csk) = \cK$ \quad if $\cc$ is an encapsulation of $\cK$, else $\bot$.
+		\end{center}
+
+	\subsection{Data Encapsulation Mechanism - DEM}
+		Data encapsulation refers to how we use a symmetric encryption scheme to send data to a recipient securely. They are generally based on a block cipher since this allows the data to be of variable length. The formal definition is as follows:
+		\begin{center}
+			$DEM(\cm,\cK) = \cc$ \quad where $\cK$ is a key for the symmetric key function.\\
+			$DEM^{-1}(\cc,\ck) = \cm $ \quad if decryption is successful, else $\bot$.
+		\end{center}
+
 
 \section{Padding Schemes}
 
