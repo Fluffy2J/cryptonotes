@@ -99,9 +99,6 @@
 			$DEM^{-1}(\cc,\ck) = \cm $ \quad if decryption is successful, else $\bot$.
 		\end{center}
 
-	\subsection{Security}
-
-		The standard for KEM-DEM security is the standard IND-CCA crypto game with a slight twist; the adversary is not allowed access to an encryption oracle, only a \textbf{decryption oracle}. Instead, they are given access to a \textbf{decapsulation oracle}, $KEM^{-1}$, allowing them only to decapsulate $\cpk$. In every other respect the crypto game is identical to conventional IND-CCA.
 
 \section{Padding Schemes}
 
@@ -141,3 +138,48 @@
 
 
 \section{ElGamal}
+
+	\subsection{The Diffie-Hellman Problems}
+
+	There are, in fact, two Diffie-Hellman problems, a computational one and a decisional one. Let $g$ be a generator for some group, and let $x, y$ and $z$ be integers. In the Computational Diffie-Hellman problem, you are given $g$, $g^x$ and $g^y$, and must compute $g^xy$. For the decisional diffie-hellman problem, you are given $g$, $g^x$, $g^y$ and $g^z$, and are required to decide if $z=xy$. ElGamal is an encryption scheme built on the assumption that both of these problems are hard.\\
+\\
+	\subsection{The Algorithms}
+
+	Let $\blue{p}$ be some large prime, usually around 1024-bits. Let $\blue{q}$ be another prime, usually around 160-bits, such that $\blue{q}$ divides $\blue{p}-1$. Compute $\blue{g}$, a generator of a multiplicative group of order $\blue{q}$ -- usually the group of positive integers modulo $q$ under multiplication. $\blue{(p,q,g)}$ are the public domain parameters of the ElGamal scheme, and are part of the public key.\\
+\\
+	Now let $1 \leqslant \red{x} < \blue{q}$ be some random integer, and let
+	$$
+		\blue{h} \cong \blue{g}^\red{x} \mod \blue{p}
+	$$
+	$\blue{h}$ is the ElGamal public key, and $\red{x}$ is the private key.\\
+\\
+	To encrypt some message, $\red{m}$, pick some random integer $1 \leqslant k < \blue{q}$, and compute
+	\begin{align*}
+		\blue{c_1} &\cong \blue{g}^\red{k} \mod \blue{p}\\
+		\blue{c_2} &\cong \red{m}\blue{h}^\red{k} \mod \blue{p}
+	\end{align*}
+	And send $\blue{c = (c_1,c_2)}$.\\
+\\
+	To decrypt some ciphertext, $\blue{(c_1,c_2)}$, compute
+	$$
+		\red{m} \cong \blue{c_1}^{-\red{x}}\blue{c_2} \mod \blue{p}
+	$$
+	The proof that this decryption works is somewhat simpler than it was for ElGamal. Expand all ciphertexts to their definitions to see that $\blue{c_1} \cong \blue{g}^\red{k}$ and $\blue{c_2} \cong \red{m}\blue{g}^{\red{xk}}$, and note that
+	\begin{align*}
+		 \blue{c_1}^{-\red{x}}\blue{c_2}
+	&\cong (\blue{g}^\red{k})^{-\red{x}}\red{m}\blue{g}^\red{xk} \mod \blue{p} \\
+	&\cong \blue{g}^{\red{xk}}\blue{g}^{-\red{xk}}\red{m} \mod \blue{p} \\
+	&\cong \red{m} \mod \blue{p}
+	\end{align*}
+	So decryption inverts encryption.\\\vspace{5mm}
+\\
+	ElGamal is OW-CPA under the assumption that the Computational Diffie Hellman problem is hard. Proving this is a little more difficult than with RSA, so pay attention.\\
+\\
+	Suppose there exists some adversary against ElGamal encryption. Given only public information, ie the domain parameters and a ciphertext, this adversary will recover the message within the cipher. We intend to exploit this adversary to solve the Computational Diffie Hellman problem, that is send it $g^x$ and $g^y$, and somehow recover $g^xy$.\\
+\\
+	Let $h$, the public key, be equal to $g^x$. Choose $c_1 = g^y$ and $c_2 = 1$. This is entirely valid, since the oracle must account for whatever random number, $k$, the encryption process chooses. If $c_1 = g^y$, then it must be the case that $k=y$. If $c_2=1$, it must be the case that $mg^{xy} = 1$. Hence the oracle must return $m \cong g^{-xy} \mod p$. Finding the modular inverse of $m$ is certainly slow, but is not computationally hard, hence $m^{-1} \cong g^{xy} \mod p$, and we have easily solved the Computational Diffie Hellman problem.\\
+\\
+	This gives us a contradiction, since the Computational Diffie Hellman problem is hard, so the supposed OW-CPA adversary against ElGamal cannot exist.
+\begin{flushright}
+QED
+\end{flushright}
