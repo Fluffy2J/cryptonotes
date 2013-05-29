@@ -116,13 +116,13 @@
     \begin{figure}[htp!]
         \centering
         MAC = $h_{k}(m)$
-    \end{figure}
-
+    \end{figure}\\
+    \\
     You would then typically send the MAC concatenated at the end of the message. The hash function, as per Kerckhoff's principle, is publicly described. Given \emph{k} and \emph{m}, computing $h_{k}(m)$ should be easy.
-    Given only \emph{m}, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.
-
-    A hash function is simply a surjective mapping from arbritrarily long strings to fixed length hash strings. 
-
+    Given only \emph{m}, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.\\
+    \\
+    A hash function is simply a surjective mapping from arbritrarily long strings to fixed length hash strings. \\
+    \\
     \subsection{Security Model}
     Our security models are simple:
     \begin{itemize}
@@ -132,14 +132,14 @@
         \item \textbf{EF-CMA}: As above, but the douche of an adversary has an oracle that can perform MAC generation on other messages of his choice (but not the target message). This is the `Chosen Message' Attack
     \end{itemize}
 
-    We will now look at two games for Existential Forgery; as a MAC may be probabilistic, we define two algorithms for these games:
-
+    We will now look at two games for Existential Forgery; as a MAC may be probabilistic, we define two algorithms for these games:\\
+    \\
     \begin{itemize}
         \item $\textbf{MAC}_{k}(m)$: Generates the MAC for message \emph{m}.
         \item $V_{k}(m, c)$: A boolean-returning verification function. True is good. False is bad. Get with the program, kids. Also this may not simply be a case of recomputing the MAC; if the algorithm that generates it is probabilistic, we need other methods of checking correctness.
     \end{itemize}
 
-    It is a given that our opponent has access to a Verification Oracle (otherwise how will they know if they have cracked it?). 
+    It is a given that our opponent has access to a Verification Oracle (otherwise how will they know if they have cracked it?).\\
 
     \begin{figure}[htp!]
     \centering
@@ -165,15 +165,15 @@
     \end{subfigure}
     \caption{MAC security games}
     \label{fig:ef-games}
-\end{figure}
+    \end{figure}
 
-    There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.
-
-    Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
-
+    There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $m^{*}$ can be passed to the oracle, $c^{*}$ must not have been returned.\\
+    \\
+    Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!\\
+    \\
     \subsection{IND-CCA Here We Come}
-    The reason that CBC and CTR modes, whilst groovy, were not \textbf{IND-CCA} was that an attacker could look at our ciphertext and construct a related one which could be decrypted through their oracle, giving them a related plaintext.
-
+    The reason that CBC and CTR modes, whilst groovy, were not \textbf{IND-CCA} was that an attacker could look at our ciphertext and construct a related one which could be decrypted through their oracle, giving them a related plaintext.\\
+    \\
     MAC prevents them from doing that! Sweet! So to make an \textbf{IND-CCA} secure scheme you will need:
     \begin{itemize}
         \item One \textbf{IND-CPA} secure symmetric cipher \emph{E}.
@@ -182,6 +182,7 @@
     \end{itemize}
 
     We can then construct encryption and decryption thusly:
+    \\
     \begin{figure}[htp!]
     \centering
     \raisebox{-0.5\height}{
@@ -215,21 +216,21 @@
     \caption{How To Make an IND-CCA Scheme}
     \label{fig:ind-cca-ed}
     \end{figure}
-
-    This obviously involves the ciphertext being expanded (more than it might be already) because it includes a MAC. 
-
+    \\
+    This obviously involves the ciphertext being expanded (more than it might be already) because it includes a MAC.\\
+    \\
     With the MAC allowing us to validate a ciphertext as being `authentic', this type of scheme is often called \emph{`authenticated encryption'}.
     It is important to realise the \textbf{very important} distinction between this idea, which is that a ciphertext is authentic, and the concept that a ciphertext came from where it was supposed to, which is part of the regular cryptographic definition of `Authenticity'.
 
     \subsection{How To Make A MAC}
-    There are a few types of MAC schemes, from MACs that are custom made for that specific encryption scheme to MACs that are derived from MDCs (Manipulation Detection Codes).
-
+    There are a few types of MAC schemes, from MACs that are custom made for that specific encryption scheme to MACs that are derived from MDCs (Manipulation Detection Codes).\\
+    \\
     The most popular, and exceedingly examinable, variants that we look at are all based on CBC-mode block ciphers. They are covered by various international standards\footnote{Gotta love standards. Thrilling stuff} and are very widely used. We shall refer to schemes like this under the title of CBC-MAC. Like this...
 
     \subsection{CBC-MAC}
-    CBC-MAC is pretty much a straightforward application of a block cipher (like DES or AES). We just have to add the MAC on after padding the ciphertext.
-
-    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $m_{1}, m_{2}...m_{q}$, we would do as follows:
+    CBC-MAC is pretty much a straightforward application of a block cipher (like DES or AES). We just have to add the MAC on after padding the ciphertext.\\
+    \\
+    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $m_{1}, m_{2}...m_{q}$, we would do as follows:\\
     \begin{enumerate}
         \item Set initial intermediate variables: $I_{1} = m_{1}, O_{1} = e_{k}(I_{1})$
         \item For $i = 2, 3 ... q$:
@@ -240,60 +241,56 @@
         \item Do any post-processing you want on $O_{q}$.
         \item Truncate if necessary to $m$ bits and serve piping hot.
     \end{enumerate}
-
-    In terms of padding the ciphertext, there are 3 schemes suggested in those groovy groovy standards. All of these pad to a whole number of blocks.
+    
+    In terms of padding the ciphertext, there are 3 schemes suggested in those groovy groovy standards. All of these pad to a whole number of blocks.\\
     \begin{itemize}
         \item Just add zeroes. Easy, right?
         \item Add a single 1, then trail out with zeroes.
         \item Pad with zeroes until you get a whole number of blocks, then add a block containing the length of the unpadded message.
     \end{itemize}
-
-    In terms of optional post-processing, there are two specified methods:
+    In terms of optional post-processing, there are two specified methods:\\
     \begin{itemize}
         \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k}(d_{k_{1}}(O_{q})$
         \item Choose another key, $k_{1}$, and replace $O_{q}$ with $e_{k_{1}}(O_{q})$ 
     \end{itemize}
-
     Either one of those can make it much harder to do a brute force search for $k$. Which is a good thing, young padawan. Oh yes.
 
     \subsection{Hashing}
-    Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.
-
-    Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is an CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash. TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.
-
-    I know that earlier I talked about hashing with a key, but in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:
+    Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.\\
+    \\
+    Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is an CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash. TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.\\
+    \\
+    I know that earlier I talked about hashing with a key, but in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:\\
     \begin{enumerate}
         \item Preimage Resistance: given $c = h(m)$, hard to find another $m^{'}$ such that $h(m^{'} = c = h(m)$
         \item 2nd Preimage Resistance: The same as preimage resistance, except that we are also given $m$.
         \item Collision Resistance: hard to find $m, m^{'} \neq m$ such that $h(m) = h(m^{'}$
     \end{enumerate}
-
     Typical practical choices for a cryptographic hash are the SHA family, or the RIPEMD family.
 
     \subsection{From Hash To MAC}
 
-    Given a hash function, how can we bung a key in there sensibly? There are the simple prefix, suffix and envelope methods, though these are not secure.
+    Given a hash function, how can we bung a key in there sensibly? There are the simple prefix, suffix and envelope methods, though these are not secure.\\
+    
     \begin{itemize}
         \item With prefixing it is possible to calculate $MAC_{k}(m||m^{'})$ without knowing the key. Simply split your intended message in half, and you're good to go. Exact method not shown in notes.
         \item Suffixing suffers from a weakness that makes it easier to find collisions in the hash function; this can be done offline, as well, so you do not need to send lots of queries to the target. Exact methodology not disclosed in notes.
         \item Envelope method with padding: The reason this isn't secure isn't given in the notes, and I can't find it online. TODO: SOMEONE HELP ME OH GOD PLEASE
     \end{itemize}
-
-    It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):
-
+    It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):\\
     $$HMAC_{k}(m) = h(k||p_{1}||h(k||p_{2}||m))$$
-
-    Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $k$ to a full block.
-
-    You can use both MDC and MAC for data integrity, with or without confidentiality.
-
+    \\
+    Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $k$ to a full block.\\
+    \\
+    You can use both MDC and MAC for data integrity, with or without confidentiality.\\
+    \\
     Without confidentiality:
+    \\
     \begin{itemize}
         \item \textbf{MAC}: compute $MAC_{k}(m)$ and send $m||MAC_{k}(m)$
         \item \textbf{MDC}: Send h(m) over a seperate, authenticated channel.
     \end{itemize}
-
-    With confidentiality:
+    With confidentiality:\\
     \begin{itemize}
         \item \textbf{MAC}: need two different keys, $k_{1}$ and $k_{2}$
         \begin{itemize}
@@ -301,4 +298,4 @@
             \item $k_{2}$ if for computing $MAC_{k_{2}}(c)$, which you append to $c$ before sending that combined string.
         \end{itemize}
         \item \textbf{MDC}: we only need one key $k$ for encryption, where we send $c = e_{k}(m||h(m))$, but as we discussed earlier this can be compromised by a man in the middle attack.
-    \end{itemize} 
+    \end{itemize}
