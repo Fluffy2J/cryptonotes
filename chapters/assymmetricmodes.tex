@@ -100,5 +100,27 @@
 
 
 \section{Rabin}
+	Rabin encryption is a public key cryptography scheme that is provably more secure than RSA. Its security is based on the difficulty of the SQROOT problem, which is provably equal in difficulty to the FACTORING problem. By contrast, the RSA problem, while assumed to be hard, has not been proven to be hard.\\
+	\\
+	Our private key is made up of two components, $\textcolor{R}{p}$ and $\textcolor{R}{q}$, two similarly sized prime numbers where $\textcolor{R}{p} = \textcolor{R}{q} = 3 \mod 4$.\footnote{This just makes extracting roots fast, there is no cryptographic need for this.}\\
+	\\
+	Our public key is made up of two components as well, $\textcolor{B}{N} = \textcolor{R}{p}*\textcolor{R}{q}$ and $\textcolor{B}{B}$. $\textcolor{B}{B}$ is a randomly chosen number between $0$ and $\textcolor{B}{N}$\\
+  \begin{figure}[htp!]
+		$$c = m * (m + \textcolor{B}{B}) \mod \textcolor{B}{N}$$
+  \caption{Rabin Encryption Algorithm}
+  \label{fig:rabin-enc}
+  \end{figure}
+
+  \begin{figure}[htp!]
+		$$m = \sqrt{\frac{\textcolor{B}{B}^2}{4}+c} - \frac{\textcolor{B}{B}}{2} \mod \textcolor{B}{N}$$
+  \caption{Rabin Decryption Algorithm}
+  \label{fig:rabin-dec}
+  \end{figure}
+	An interesting property of the Rabin scheme, as seen in Figure~\ref{fig:rabin-dec}, the private key is not strictly speaking needed for decryption, however in reality this is a case of the SQROOT problem; even knowing the contents of the square root, finding the square root is not a trivial task.\\
+	\\
+	This is where the private key comes in. Lets focus on the portion of the equation that is hard to solve:
+	$$t = \frac{\textcolor{B}{B}^2}{4}+c$$
+	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. % TODO: I'm stopping here because at this point I'm lost. - Matt
+
 
 \section{ElGamal}
