@@ -134,7 +134,10 @@
 	\\
 	This is where the private key comes in. Lets focus on the portion of the equation that is hard to solve:
 	$$t = \frac{\textcolor{B}{B}^2}{4}+c$$
-	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. % TODO: I'm stopping here because at this point I'm lost. - Matt
+	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. Recall that using CRT we have the equation as follows, with as yet unknowns highlighted:
+
+	$$ t \mod N = (\mathbf{a_1} p \mathbf{y_1}) + (\mathbf{a_2} q \mathbf{y_2}) \mod N $$
+	Fortunately these are easy enough to find. % TODO: BUT HOW LOL. - Matt
 
 
 \section{ElGamal}

@@ -80,8 +80,8 @@
         \\
         Anyway, back to the maths... The CRT states that $x = y \mod N$ can be reconstructed based on answers to each sub-modulus thus:
 
-        $$ x = \sum\limits_{i=1}^{r} a_i n_i y_i \mod N $$
-        Where $a_i$ is the remainder modulo $n_i$.
+        $$ x = \sum\limits_{i=1}^{r} a_i N_i y_i \mod N $$
+        Where $a_i$ is the remainder modulo $n_i$, $N_i = N/n_i$, and $y_i = N_i^{-1} \mod n_i$
 
     
     \section{One Way Functions}
