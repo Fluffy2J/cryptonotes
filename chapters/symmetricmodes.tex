@@ -250,4 +250,33 @@
 
     \subsection{From Hash To MAC}
 
-    Given a hash function, how can we bung a key in there sensibly?
+    Given a hash function, how can we bung a key in there sensibly? There are the simple prefix, suffix and envelope methods, though these are not secure.
+    \begin{itemize}
+        \item With prefixing it is possible to calculate $MAC_{k}(m||m^{'})$ without knowing the key. Simply split your intended message in half, and you're good to go. Exact method not shown in notes.
+        \item Suffixing suffers from a weakness that makes it easier to find collisions in the hash function; this can be done offline, as well, so you do not need to send lots of queries to the target. Exact methodology not disclosed in notes.
+        \item Envelope method with padding: The reason this isn't secure isn't given in the notes, and I can't find it online. TODO: SOMEONE HELP ME OH GOD PLEASE
+    \end{itemize}
+
+    It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):
+
+    $$HMAC_{k}(m) = h(k||p_{1}||h(k||p_{2}||m))$$
+
+    Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $k$ to a full block.
+
+    You can use both MDC and MAC for data integrity, with or without confidentiality.
+
+    Without confidentiality:
+    \begin{itemize}
+        \item \textbf{MAC}: compute $MAC_{k}(m)$ and send $m||MAC_{k}(m)$
+        \item \textbf{MDC}: Send h(m) over a seperate, authenticated channel.
+    \end{itemize}
+
+    With confidentiality:
+    \begin{itemize}
+        \item \textbf{MAC}: need two different keys, $k_{1}$ and $k_{2}$
+        \begin{itemize}
+            \item $k_{1}$ is for computing $c = e_{k_{1}}(m)$
+            \item $k_{2}$ if for computing $MAC_{k_{2}}(c)$, which you append to $c$ before sending that combined string.
+        \end{itemize}
+        \item \textbf{MDC}: we only need one key $k$ for encryption, where we send $c = e_{k}(m||h(m))$, but as we discussed earlier this can be compromised by a man in the middle attack.
+    \end{itemize} 
