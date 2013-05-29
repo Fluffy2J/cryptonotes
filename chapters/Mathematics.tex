@@ -2,16 +2,39 @@
 \chapter{Mathematics}
 % Alternative title: kill me now. 
 % I will buy the person that writes this section a Freddo. - Matt Bessey.
-    \section{Modular Arithmetic}
+% Matt, you owe me a Freddo - Drum Ogilvie
+    \section{Modular Arithmetic \& Groups}
+    \subsection{Modular Arithmetic}
+    Modular arithmetic is a bit odd at first, but you get used to it. It's all about remainders, really; we express modular relations in the following form:\\
+    \begin{figure}
+    \centering
+        $$
+        X \equiv \textit{Y \emph{\textbf{MOD}} Z}
+        $$
+    \end{figure}\\
     
+    Where $X$ is any old number and $Z$ is the `Modulus'. Y is the remainder of the integer division of $X$ by $Z$, the result of an operation expressed in many languages (including C) as $X \% Z$. Simples.\\
+    \\
+    This leads us nicely onto groups.
+
+    \subsection{Groups}
+    A mathematical group is a combination of a set and an operation. So in our case, we use the set of remainders under some Modulus, defined thusly:
+    \begin{figure}
+    $$
+        (\mathbb{Z}/N\mathbb{Z}) = \{0,..., N - 2, N - 1 \}
+    $$
+
     \section{Multiplicative Inverse}
+    The `inverse' for a group member is another member of the same group that when used as the second argument for the operation gives the result of the identity for that operation.\\
+    \\
+    In this case, the operation is multiplication, the multiplicative identity is 1, and our group is usually numbers Modulo N. So the inverse of one number Mod N is another number less than N, that when you multiply them together you get a number which is 1 Mod N. Still here? Still awake? Stay with me, soldier.
     
     \section{Greatest Common Divisor}
+    Say you've got two numbers. What is the biggest factor that they both share? BOOM. 
     
     \section{Euler Phi Function}
-    
-    \section{Groups}
-    
+    Also known as Euler's Totient Function
+        
     \section{Lagrange's Theorem}
     
         \subsection{Fermat's Little Theorem}
