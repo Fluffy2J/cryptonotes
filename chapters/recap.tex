@@ -1,0 +1,16 @@
+\chapter{Recap}
+	% Summary and comparison section
+
+	\begin{table}[htp!]
+		\centering
+		\begin{tabular}{llll}
+			\toprule
+			Scheme & Mode & \multicolumn{2}{l}{Passes up to}\\
+			&& \multicolumn{2}{l}{security model for}\\\cmidrule(r){3-4}
+			&& IND & OW\\\midrule
+			Block Cipher & Electronic Code Book & --- & CPA\\
+			& Chained Block Cipher & CPA & CPA\\
+			& Counter & CPA & CPA\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
