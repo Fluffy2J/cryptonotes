@@ -64,7 +64,6 @@
     \\
     The other important case for cryptography is where we are using two primes ($p$ and $q$) to create a new modulus:
     $$ \phi(p \cdot q) = (p-1)(q-1)$$
-
     Since you are undoubtedly on a roll, here is the actual formula (it's not too scary); the first is the prime factorization of N, which we need.
 
     $$N = \prod_{i=1}^{n}p_{i}^{e_{i}} \textbf{ allowing us to use } \phi(N) = \prod_{i=1}^{n}p_{i}^{e_{i}-1}(p_{i} - 1)$$
@@ -79,6 +78,13 @@
     \section{Chinese Remainder Theorem}
     
     \section{One Way Functions}
+        Firstly, lets define a function simply as something that for every item in set $X$ there is a mapping to set $Y$:
+        $$f\colon X \rightarrow Y : x \mapsto y = f(x)$$
+        Such a function is known as a \textbf{one way function} if, for all $x$, $f(x) = y$ is efficient to compute, while computing the $x$ that maps to $y$ is infeasible. When we say infeasible, we mean its so bloody hard it would essentially take, like, \textbf{forever}.\\
+        \\
+        There is a special subset of one way functions, known as \textbf{trapdoor one way functions}. These are so named because, while reversing them naively is infeasible, given some extra \textbf{trapdoor information}, they are \textbf{easily inverted}. An example of such a function would be the RSA algorithm, where deducing $\cm$ from $\cc$ is impossible without the necessary trapdoor information, which in the case of RSA is the private key.
+
+
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % There's actually a few more sections %
