@@ -238,4 +238,16 @@
     Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.
 
     Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is an CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash. TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.
-    
+
+    I know that earlier I talked about hashing with a key, but in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:
+    \begin{enumerate}
+        \item Preimage Resistance: given $c = h(m)$, hard to find another $m^{'}$ such that $h(m^{'} = c = h(m)$
+        \item 2nd Preimage Resistance: The same as preimage resistance, except that we are also given $m$.
+        \item Collision Resistance: hard to find $m, m^{'} \neq m$ such that $h(m) = h(m^{'}$
+    \end{enumerate}
+
+    Typical practical choices for a cryptographic hash are the SHA family, or the RIPEMD family.
+
+    \subsection{From Hash To MAC}
+
+    Given a hash function, how can we bung a key in there sensibly?
