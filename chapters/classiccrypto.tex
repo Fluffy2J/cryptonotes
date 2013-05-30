@@ -2,70 +2,77 @@
 
 \section{Historical Ciphers and Their Cryptanalysis}
 
-\begin{itemize}
-    \item \textbf{Caesar cipher}\\\\
-The encryption is done by rotating the letters of the alphabet by 3(A becomes D). The biggest problem
-with this cipher is that the method is fixed and there is no key to speak of. Therefore anyone
-learning the decryption algorithm would be able to get the initial message effortlessly.
-    \item \textbf{The shift cipher}\\\\
-This cipher is similar to the Caesar cipher but it introduces a secret key \textit{k} that is a number
-between 0 and 25. The encryption is then done by shifting the letters by \textit{k} places.\\\\
-$Enc(\cm_{i}) = [(\cm_i+\ck) \mod 26];\\
-Dec(\cc_{i}) = [(\cc_{i}-\ck) \mod 26]$\\\\
-This cipher is not secure as it can be easily broken by doing an exhaustive search. There are
-only 26 possible keys therefore the cipher does not follow the insufficient key space principle
-which says that any secure encryption scheme must have a key space that is not vulnerable to
-exhaustive search. The number of possible keys must be very large (at least 2\textsuperscript{60} or 2\textsuperscript{70}).
-    \item \textbf{Mono-alphabetic substitution}\\\\
-The idea behind the mono-alphabetic substitution is to map each plaintext character to a
-different cipher text character in an arbitrary manner. The keys space thus consists of all
-permutations of the letters of the alphabet which is approximately 2\textsuperscript{88}, too big for an exhaustive search.\\
-However this does not make it secure. Considering that the plain text message is written
-in plain English we can calculate the frequency of each letter and then compare the cipher`s table of frequencies with the table of frequencies for the English language.
-    \item \textbf{Improved attack on the shift cipher}\\\\
-The initial approach was to try all possible keys and check which one gives a message that
-``makes sense''. But sometimes it is hard to define what ``makes sense'' actually means. If the
-initial message is not written in plain English it is hard to know which solution is the correct one.
-There are cases though when the plain text message is not written in valid English but has the
-letter distribution of such a text.\\
-In this case we compute the following sum: \begin{math}I_j = \sum_{i=0}^{25} p^2*\approx0.065\end{math} where \textit{p\textsubscript{i}} is each letter`s frequency in the plain text with \begin{math}0<=i<=25\end{math}. We know that the letters are shifted by \textit{k} spaces, therefore \textit{q\textsubscript{i+k} = p\textsubscript{i}}. Now all we need to do is compute the sum \begin{math}I_j = \sum_{i=0}^{25} p_i*q_{i+j}\end{math} where \textit{q\textsubscript{i}} is each letter`s frequency in the cipher text and compare it to 0.0065. The \textit{j} for which I\textsubscript{j} is closest to 0.065 is the key. 
+	\begin{itemize}
+	    \item \textbf{Caesar cipher}\\\\
+	The encryption is done by rotating the letters of the alphabet by 3(A becomes D). The biggest problem
+	with this cipher is that the method is fixed and there is no key to speak of. Therefore anyone
+	learning the decryption algorithm would be able to get the initial message effortlessly.
+	    \item \textbf{The shift cipher}\\\\
+	This cipher is similar to the Caesar cipher but it introduces a secret key \textit{k} that is a number
+	between 0 and 25. The encryption is then done by shifting the letters by \textit{k} places.\\\\
+	$Enc(\cm_{i}) = [(\cm_i+\ck) \mod 26];\\
+	Dec(\cc_{i}) = [(\cc_{i}-\ck) \mod 26]$\\\\
+	This cipher is not secure as it can be easily broken by doing an exhaustive search. There are
+	only 26 possible keys therefore the cipher does not follow the insufficient key space principle
+	which says that any secure encryption scheme must have a key space that is not vulnerable to
+	exhaustive search. The number of possible keys must be very large (at least 2\textsuperscript{60} or 2\textsuperscript{70}).
+	    \item \textbf{Mono-alphabetic substitution}\\\\
+	The idea behind the mono-alphabetic substitution is to map each plaintext character to a
+	different cipher text character in an arbitrary manner. The keys space thus consists of all
+	permutations of the letters of the alphabet which is approximately 2\textsuperscript{88}, too big for an exhaustive search.\\
+	However this does not make it secure. Considering that the plain text message is written
+	in plain English we can calculate the frequency of each letter and then compare the cipher`s table of frequencies with the table of frequencies for the English language.
+	    \item \textbf{Improved attack on the shift cipher}\\\\
+	The initial approach was to try all possible keys and check which one gives a message that
+	``makes sense''. But sometimes it is hard to define what ``makes sense'' actually means. If the
+	initial message is not written in plain English it is hard to know which solution is the correct one.
+	There are cases though when the plain text message is not written in valid English but has the
+	letter distribution of such a text.\\
+	In this case we compute the following sum: \begin{math}I_j = \sum_{i=0}^{25} p^2*\approx0.065\end{math} where \textit{p\textsubscript{i}} is each letter`s frequency in the plain text with \begin{math}0<=i<=25\end{math}. We know that the letters are shifted by \textit{k} spaces, therefore \textit{q\textsubscript{i+k} = p\textsubscript{i}}. Now all we need to do is compute the sum \begin{math}I_j = \sum_{i=0}^{25} p_i*q_{i+j}\end{math} where \textit{q\textsubscript{i}} is each letter`s frequency in the cipher text and compare it to 0.0065. The \textit{j} for which I\textsubscript{j} is closest to 0.065 is the key. 
 
-    \item \textbf{The Vigenere cipher}\\\\
-The statistical attack on the mono-alphabetic substitution cipher was possible because the
-mapping of each letter was fixed.\\
-Consider the possibility when a letter is mapped to multiple letters. In this case the table of
-frequencies would be irrelevant as the frequencies are very similar.
-The Viginere cipher takes a repeated small string and forms the key which is then added to the
-original message.\\
-In order to simplify the breaking process we first need to identify the length of the key. If the
-original message is written in plain English then we should look for repeated sequences of length
-2 and 3 in the key. These will indicate us the appearances of common words like \textit{``the''} which
-are in the same relative position of the small substring that is repeated, therefore the distance
-between 2 such appearances would be a multiple of the length of the substring. Knowing this
-we can assume that the greatest common divisor between the distances of such appearances is
-either the length of the key or a multiple of it.\\
-Knowing the key`s length the task is much simplified. We notice that we can split the initial text
-in a number of substrings equal to the keys length(\textit{n}). This way the characters on positions \textit{1,n, 2n} etc. will be encrypted using the first character of the key, the positions \textit{2, n+1, 2n+1} etc. using the second character of the key and so on.\\
-We now have \textit{n} different ciphers that are encrypted using the shift cipher with key \textit{K[i]}.
-Therefore we need to decipher each string individually. Considering that we selected dispersed
-characters from a plain English text, all the substrings will not be in plain English. Knowing this
-we can now apply the method described above under \textit{``Improved attack on the shift cipher''}.
-\end{itemize}
-
+	    \item \textbf{The Vigenere cipher}\\\\
+	The statistical attack on the mono-alphabetic substitution cipher was possible because the
+	mapping of each letter was fixed.\\
+	Consider the possibility when a letter is mapped to multiple letters. In this case the table of
+	frequencies would be irrelevant as the frequencies are very similar.
+	The Viginere cipher takes a repeated small string and forms the key which is then added to the
+	original message.\\
+	In order to simplify the breaking process we first need to identify the length of the key. If the
+	original message is written in plain English then we should look for repeated sequences of length
+	2 and 3 in the key. These will indicate us the appearances of common words like \textit{``the''} which
+	are in the same relative position of the small substring that is repeated, therefore the distance
+	between 2 such appearances would be a multiple of the length of the substring. Knowing this
+	we can assume that the greatest common divisor between the distances of such appearances is
+	either the length of the key or a multiple of it.\\
+	Knowing the key`s length the task is much simplified. We notice that we can split the initial text
+	in a number of substrings equal to the keys length(\textit{n}). This way the characters on positions \textit{1,n, 2n} etc. will be encrypted using the first character of the key, the positions \textit{2, n+1, 2n+1} etc. using the second character of the key and so on.\\
+	We now have \textit{n} different ciphers that are encrypted using the shift cipher with key \textit{K[i]}.
+	Therefore we need to decipher each string individually. Considering that we selected dispersed
+	characters from a plain English text, all the substrings will not be in plain English. Knowing this
+	we can now apply the method described above under \textit{``Improved attack on the shift cipher''}.
+	\end{itemize}
 
 \section{Perfectly Secret Encryption}
-\textbf{Definition:} An encryption scheme $(Gen,Enc,Dec)$ over a message space $\cm$ is perfectly secret if for every probability distribution over $\cm$, every message $\cm \in M$, and every ciphertext $\cc \in C$ for which $P(C=\cc)>0:$
+	\textbf{Definition:} An encryption scheme $(Gen,Enc,Dec)$ over a message space $\cm$ is perfectly secret if for every probability distribution over $\cm$, every message $\cm \in M$, and every ciphertext $\cc \in C$ for which $P(C=\cc)>0:$
 
-$$P(M=\cm|C=\cc)=P(M=\cm)$$
+	$$P(M=\cm|C=\cc)=P(M=\cm)$$
 
-In other words a scheme is perfectly secret if the distributions over messages and ciphertexts are independent.
+	In other words a scheme is perfectly secret if the distributions over messages and ciphertexts are independent.
 
 \section{One Time Pad}
-The one time pad is a good system to review because it is \textbf{totally secure} / perfectly secret, if used correctly. Sadly, it is difficult to use in the real-world.\\
-\\
-It works by XOR-ing the entire message by the cipher. This means that the cipher must be as long as the message, which is clearly a limitation in the real world --- encrypting your hard drive would require another hard drive of data for the cipher.\footnote{The XOR operations outputs a 0 bit at every position in which both operands have the same bit, and a 1 in positions where they differ.}\\
-\\
-The other limitation is the fact it can only be used once. This is because an adversary  can ask you to encrypt a message ($\cc=\cm\oplus k$). They can then use that to calculate the key, $\ck$,  because they have both $\cc$ and $\cm$ ($\ck=\cm\oplus \cc$). In practice, this means that if you know part of a message being sent, you can use that to calculate the bits of cipher in those positions.
+	The one time pad is a good system to review because it is \textbf{totally secure} / perfectly secret, if used correctly. Sadly, it is difficult to use in the real-world.\\
+	\\
+	It works by XOR-ing the entire message by the cipher. This means that the cipher must be as long as the message, which is clearly a limitation in the real world --- encrypting your hard drive would require another hard drive of data for the cipher.\footnote{The XOR operations outputs a 0 bit at every position in which both operands have the same bit, and a 1 in positions where they differ.}\\
+	\\
+	The other limitation is the fact it can only be used once. This is because an adversary  can ask you to encrypt a message ($\cc=\cm\oplus k$). They can then use that to calculate the key, $\ck$,  because they have both $\cc$ and $\cm$ ($\ck=\cm\oplus \cc$). In practice, this means that if you know part of a message being sent, you can use that to calculate the bits of cipher in those positions.
 
 \section{Shannon's Theorem}
-...
+	
+	Shannon's theorem provides a generalised definition for deeming whether a cryptosystem is \textbf{perfectly secret}. First, we assume we have a system with equal numbers of keys, plaintext, and ciphertexts; $\mathbf{\#K = \#P = \#C}$.\\
+	\\
+	We say that this system provides perfect secrecy iff:
+	\begin{itemize}
+		\item The probability of any key being used is $1/\#K$.
+		\item For each $m \in P$ there exists a $c \in C$.
+	\end{itemize}
+	It's worth briefly looking into the \textit{why} of Shannon's theorem. If $\#K = \#P = \#C$, then given a key, there must be one mapping of each plaintext to each ciphertext. And if we try every key, then a given message must map to every ciphertext. If it does not, then we have leaked information about the message, for example if $m_1$ maps to $c_{666}$ more than once when encrypted with every key, then given $c_{666}$ we can say of all messages, it is more likely to be $m_1$ than another message, despite not even knowing the key!
