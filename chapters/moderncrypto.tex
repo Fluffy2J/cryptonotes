@@ -1,16 +1,12 @@
 \chapter{Modern Cryptographic Definitions}
 
 
-\section{The Base Principles of Modern Cryptography}
+\section{The Three Principles of Modern Cryptology}
 
 \begin{enumerate}
-    \item \textbf{Principle 1:} \textcolor{R}{The first step in solving any cryptographic problem is formulating a rigorous and precise
-definition of security.}
-    \item \textbf{Principle 2:} \textcolor{B}{When a cryptographic system relies on an unproven assumption, it must be precisely
-stated. Furthermore, this assumption must be minimal.}
-    \item \textbf{Principle 3:} \textcolor{G}{Cryptographic constructions must be accompanied by a rigorous proof of security
-with respect of a definition formulated in principle 1, revolving around the assumptions stated in
-principle 2 (if any).}
+    \item Formulate a rigorous and \textbf{precise definition of security}.
+    \item When a cryptographic system relies on an \textbf{unproven assumption}, it must be \textbf{precisely stated}. Furthermore, this assumption \textbf{must be minimal}.
+    \item Cryptographic constructions must be accompanied by a \textbf{rigorous proof of security} with respect to the definition formulated in principle 1, revolving around the assumptions stated in principle 2.
 \end{enumerate}
 
 \subsection{Principle 1: Formulation of Exact Definitions}
@@ -31,13 +27,13 @@ efficiency(which is not very accurate).
     \end{itemize}
     \item \textbf{How do we define security?}
     \begin{itemize}
-        \item \textcolor{R}{An encryption scheme is secure if no adversary can compute any function of the
-plaintext from the cipher text.}
-        \item \textcolor{B}{An encryption scheme is considered broken if an adversary learns some function of
-the plaintext from the cipher text.}
-        \item \textcolor{G}{The power of the adversary relates to assumptions regarding the actions the
+        \item An encryption scheme is secure if no adversary can compute any function of the
+plaintext from the cipher text.
+        \item An encryption scheme is considered broken if an adversary learns some function of
+the plaintext from the cipher text.
+        \item The power of the adversary relates to assumptions regarding the actions the
 adversary is assumed to be able to take, as well as the adversary`s computational
-power.}
+power.
     \end{itemize}
 \end{itemize}
 
@@ -53,10 +49,7 @@ Most cryptographic constructions cannot be proven secure unconditionally, theref
 
 \subsection{Principle 3: Rigorous Proofs of Security}
 
-The first two principles lead naturally to this one
-
-Most proofs in modern cryptography use ``the reductionist approach'':\\\\
-    \textit{``Given the Assumption A is true, Construction C is secure according to the given definition.''}
+The first two principles lead naturally to this one. Most proofs in modern cryptography use the \textbf{reductionist} approach, that is, \textit{``Given the Assumption A is true, Construction C is secure according to the given definition.''}
 
 \section{Cryptographic Games}
 
