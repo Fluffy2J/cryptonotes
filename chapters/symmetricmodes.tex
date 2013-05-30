@@ -1,6 +1,6 @@
 \chaptersub{Symmetric Modes}{Private Key Cryptography}
 
-\section{Block Cipher Modes}
+\section{Block Cipher Modes}\label{sec:blockciphermodes}
     A \textbf{block cipher} is type of encryption based on \textbf{permutation}, where they key, $\{0,1\}^k$, defines a transposition of bits in the block to the encrypted, $\{0,1\}^b$. The block is a proportion of the message.\\
     \\
     DES was the first civilian block cipher and was developed at IBM in the 1970s. When the US government adopted it, they recommended the following four ways to use it, these are now used with any block cipher.
@@ -125,9 +125,10 @@
         \label{fig:lookupsbox}
     \end{table}
     \\
-    An \textbf{S-Box} is a mapping of bit-strings to other bit-strings, theses do not have to be the same length, but if they are not, the output is almost always of a shorter length. Table~\ref{fig:lookupsbox} shows an example of an S-Box which maps 4-bit strings to 4-bit strings.\\
-    \\
-    We want to make the substitution as \textbf{non-linear} as possible. Formally, it would be linear if Equation~\ref{equ:sboxlin} was true, or at least was true was large probability. Having a linear S-Box is bad, because if we want to give a bit-string to an oracle, but can't because it is a message of ciphertext, we can transform it and then perform the reverse of that transform of on the result.
+    An \textbf{S-Box} is a mapping of bit-strings to other bit-strings, theses do not have to be the same length, but if they are not, the output is almost always of a shorter length. Table~\ref{fig:lookupsbox} shows an example of an S-Box which maps 4-bit strings to 4-bit strings. We want to make the substitution as \textbf{non-linear} as possible. Formally, it would be linear if Equation~\ref{equ:sboxlin} was true, or at least was true was large probability.
+    
+    \subsection{Differential Analysis}
+    At the heart of a number of the techniques used to successfully beat crypto games in Section~\ref{sec:blockciphermodes}, was that we get around the constraint of not being allowed to send the message or ciphertext to an oracle by changing it into something we know will still give us something useful. With a linear S-Box, we (as an attacker) would be able to transform the message/ciphertext and then perform another transformation on the oracles response.
     \begin{equation}
         \begin{array}{l}
             \csubm{1} \rightarrow \csubc{1}\\
@@ -137,14 +138,19 @@
         (\csubm{1} + \csubm{2}) \rightarrow (\csubc{1} + \csubc{2})
         \label{equ:sboxlin}
     \end{equation}
-    We can do this to the S-Box in Table~\ref{fig:lookupsbox}. The proof given in the slides is
-    %\begin{align}
-        %s_1=3,s_2=6
-
-    %    \Delta s=s_1\oplus s_2=5
-    %\end{align}
-    
-
+    To find patterns that we can exploit to do this, we perform \textbf{differential analysis} on the S-Box. Differential analysis \textit{tabulate[s] specific differences in the input that lead to specific differences in the output with probability greater than would be expected for a random permutation}. This would tell us whether adding 5 to the input will always give us an output 10 too large.\\
+    \\
+    To do this, we make a table with all the inputs against all the outputs. Then we take \textbf{every pair of inputs}, $(s_1,s_2)$, calculate there difference, $\Delta s=s_1\oplus s_2$, and the the difference between the outputs of those inputs, $\Delta t = \mathbb{S}(s_1) \oplus \mathbb{S}(s_2)$. Figure~\ref{fig:diffanalpair} gives an example of this. For each pair, we add one to the value at $(\Delta s,\Delta t)$, so that cell $(s,t)$ gives us the number of times a difference of $s$ in the input caused a difference in $t$ in the output.\\
+    \begin{figure}[htp!]
+        \begin{align*}
+            s_1=3=0011_2   && t_1=\mathbb{S}(s_1) = 1 &= 0001_2  &&  \Delta s=s_1\oplus s_2=5=0101_2\\
+            s_2=6=0110_2   && t_2=\mathbb{S}(s_2) = B &= 1011_2  &&  \Delta t=t_1\oplus t_2=A=1010_2
+        \end{align*}
+        \caption{Example of differential analysis for the pair of inputs $(3,6)$}
+        \label{fig:diffanalpair}
+    \end{figure}
+    \\
+    Although its unlikely that the table will show all differences in the input of $s$ lead to an output difference of $t$, even a \textit{better than chance} difference gives a cryptanalyst a much smaller space for them them brute force. A perfect S-Box would have a 1 in every cell, but this is \textit{impossible}. We can measure an S-Boxes quality by how close to a \textbf{uniform distribution} it has in this table.
 
 
 
