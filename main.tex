@@ -20,16 +20,16 @@
 \usepackage{booktabs}
 
 \usepackage{amsthm}
-
+\usepackage{ulem}
 
 \definecolor{R}{RGB}{220,20,60}
 \definecolor{B}{RGB}{39,64,239}
 \definecolor{G}{RGB}{0,139,69}
 \definecolor{orange}{rgb}{1,0.5,0}
 
-\newcommand{\red}[1]{{\textcolor{R}#1}}
-\newcommand{\blue}[1]{{\textcolor{B}#1}}
-\newcommand{\green}[1]{{\textcolor{G}#1}}
+\newcommand{\red}[1]{{\textcolor{R}{#1}}}
+\newcommand{\blue}[1]{{\textcolor{B}{#1}}}
+\newcommand{\green}[1]{{\textcolor{G}{#1}}}
 
 \usepackage[hidelinks]{hyperref}
 \hypersetup{linktocpage}
@@ -37,7 +37,7 @@
 \begin{document}
 
 \pagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Cryptography Notes} }
+\lhead{\footnotesize \parbox{11cm}{Cryptography A Notes} }
 \lfoot{\footnotesize \parbox{11cm}{Shared}}
 \cfoot{}
 \rhead{\footnotesize Lecture Notes}
@@ -137,11 +137,6 @@
 \mainmatter
 
 \thispagestyle{fancy}
-\lhead{\footnotesize \parbox{11cm}{Cryptography A} }
-\lfoot{\footnotesize \parbox{11cm}{Vlad Otrocol}}
-\cfoot{}
-\rhead{\footnotesize Lecture Notes}
-\rfoot{\footnotesize Page \thepage\ of \pageref{LastPage}}
 \renewcommand{\headheight}{24pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
@@ -150,7 +145,7 @@
 
 
 \newcommand{\cm}{\red{m}}
-\newcommand{\cc}{\red{c}}
+\newcommand{\cc}{\blue{c}}
 \newcommand{\cN}{\blue{N}}
 \newcommand{\cp}{\red{p}}
 \newcommand{\cq}{\red{q}}
@@ -158,6 +153,8 @@
 \newcommand{\ce}{\blue{e}}
 \newcommand{\ck}{\red{k}}
 \newcommand{\cpk}{\blue{p}\blue{k}}
+\newcommand{\csk}{\red{s}\red{k}}
+\newcommand{\cK}{\red{k}}
 
 \newcommand{\csubm}[1]{\red{m}_\red{#1}}
 \newcommand{\csubc}[1]{\red{c}_\red{#1}}
@@ -171,6 +168,9 @@
 \input{chapters/classiccrypto.tex}
 
 \input{chapters/moderncrypto.tex}
+
+\input{chapters/Mathematics.tex}
+%This chapter can go wherever, but here seemed appropriate
 
 \input{chapters/symmetricmodes.tex}
 

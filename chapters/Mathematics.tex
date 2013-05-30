@@ -2,16 +2,73 @@
 \chapter{Mathematics}
 % Alternative title: kill me now. 
 % I will buy the person that writes this section a Freddo. - Matt Bessey.
-    \section{Modular Arithmetic}
+% Matt, you owe me a Freddo - Drum Ogilvie
+    \section{Modular Arithmetic \& Groups}
+    \subsection{Modular Arithmetic}
+    Modular arithmetic is a bit odd at first, but you get used to it. It's all about remainders, really; we express modular relations in the following form:\\
+    \begin{figure}[htp!]
+    \centering
+        $$
+        X \equiv \textit{Y \emph{\textbf{MOD}} Z}
+        $$
+    \end{figure}\\
     
-    \section{Multiplicative Inverse}
+    Where $X$ is any old number and $Z$ is the `Modulus'. Y is the remainder of the integer division of $X$ by $Z$, the result of an operation expressed in many languages (including C) as $X \% Z$. Simples.\\
+    \\
+    When you are doing modulo maths in crypto, you only really need to remember 1 rule:
+    $$(a+b) \mod N \equiv \big[(a \mod N) + (b \mod N)\big] \mod N$$
+    I've used addition when writing that rule down, but it's the same for subtraction and multiplication. The reason for this is that addition and multiplication \textbf{group operations} on the set of modulo remainders. SAY WHAT?\\
+    \\
+    This leads us nicely onto groups.
+
+    \subsection{Groups}
+    A mathematical group is a combination of a set and an operation. So in our case, we use the set of remainders under some Modulus, defined thusly:\\
+    \begin{figure}[htp!]
+    $$
+        (\mathbb{Z}/N\mathbb{Z}) = \{0,..., N - 2, N - 1 \}
+    $$
+    \end{figure}\\
+
+    And our operation is going to be multiplication. This is important because to be considered a `group', the operation (when used between members of the set) must be associative, have an identity that is in the group, and have an inverse for every element in the group (which must also be in the group). Capiche? Oh, and of course the group must be closed under that operation, so every result is also in the group.\\
+    \\
+    If we have the extra special benefit of commutativity then this is an `\textbf{Abelian Group}' (sometimes just called a `commutative group').
+
+    \subsection{Rings}
+    In fact, we can have both the addition and multiplication operations with this set. Rather than defining two seperate groups, we combine the two into a new thing called a `ring'.
+    A ring in this context is a set with operations for addition and multiplication.\\
+    \\
+    It's like an abelian group with respect to addition, because addition is closed, associative, commutative, has an identity and a guaranteed inverse. Not only that, my mentally-endowed comrades, but it is like an abelian group for multiplication too, with the added awesome that multiplication is distributive over addition.\footnote{The minimal spec for a ring is an abelian group with a second associative binary operation that is distributive over the main group operation.}
+
+    \subsection{Multiplicative Inverse}
+    The `inverse' for a group member is another member of the same group that when used as the second argument for the operation gives the result of the identity for that operation.\\
+    \\
+    In this case, the operation is multiplication, the multiplicative identity is 1, and our group is usually numbers Modulo N. So the inverse of one number Mod N is another number less than N, that when you multiply them together you get a number which is 1 Mod N. Still here? Still awake? Stay with me, soldier.
     
     \section{Greatest Common Divisor}
+    Say you've got two numbers. What is the biggest factor that they both share? BOOM. DONE.\\
+    \\
+    Ok, well, there's probably this really handy algorithm you should know; the \textbf{Euclidean algorithm}. Invented by \sout{Nigel Smart} Euclid bloomin' ages ago, it's a fairly simple way to efficiently figure out the GCD of 2 numbers.
+        \begin{itemize}
+            \item Let $k$ be a number, starting at 0, that is incremented at each stage of this algorithm
+            \item Let $r_{-2} = a, r_{-1} = b$, where $a$ and $b$ are the two numbers you are testing, and $a$ is the larger of the two.
+            \item A stage is this: 
+                $$
+                    r_{k-2} = q_{k} \cdot r_{k-1} + r_{k}
+                $$
+            \item Where $q_{k}$ is the quotient of the integer division $\frac{r_{k-2}}{r_{k-1}}$, and $r_{k}$ is the remainder.
+            \item Keep going until $r_{k} = 0$, at which point $r_{k-1}$ is the GCD. If $r_{k-1}$ is 1, then your original numbers are \textbf{co-prime}, meaning that they have no common factors.
+        \end{itemize}
     
     \section{Euler Phi Function}
-    
-    \section{Groups}
-    
+    Also known as Euler's Totient Function. Because why the hell not. It is simply a measure of how many members of our set of remainders are \textbf{relatively prime} to N. In other words, how many members share no common factors with N. If we choose N to be prime, which we normally do, then $\phi(N) = N - 1$. Easy, right?\\
+    \\
+    The other important case for cryptography is where we are using two primes ($p$ and $q$) to create a new modulus:
+    $$ \phi(p \cdot q) = (p-1)(q-1)$$
+    Since you are undoubtedly on a roll, here is the actual formula (it's not too scary); the first is the prime factorization of N, which we need.
+
+    $$N = \prod_{i=1}^{n}p_{i}^{e_{i}} \textbf{ allowing us to use } \phi(N) = \prod_{i=1}^{n}p_{i}^{e_{i}-1}(p_{i} - 1)$$
+
+
     \section{Lagrange's Theorem}
     
         \subsection{Fermat's Little Theorem}
@@ -19,8 +76,22 @@
     \section{Fields}
     
     \section{Chinese Remainder Theorem}
+        The Chinese Remainder Theorem, often written CRT, states that given a modulus $N$, made up of pairwise coprime factors $n_1$, ..., $n_r$, it is possible to calculate $x = y \mod N$ by instead calculating modulo its component parts, $n_1$, ..., $n_r$ and the combining those parts using some clever maths we'll get onto in a moment. This isn't particularly useful with small $N$, but you can imagine when your $N$ and $x$ are in the $2^{1024}$ range, and you're performing modular exponentiation it has some performance implications.\\
+        \\
+        Anyway, back to the maths... The CRT states that $x = y \mod N$ can be reconstructed based on answers to each sub-modulus thus:
+
+        $$ x = \sum\limits_{i=1}^{r} a_i N_i y_i \mod N $$
+        Where $a_i$ is the remainder modulo $n_i$, $N_i = N/n_i$, and $y_i = N_i^{-1} \mod n_i$
+
     
     \section{One Way Functions}
+        Firstly, lets define a function simply as something that for every item in set $X$ there is a mapping to set $Y$:
+        $$f\colon X \rightarrow Y : x \mapsto y = f(x)$$
+        Such a function is known as a \textbf{one way function} if, for all $x$, $f(x) = y$ is efficient to compute, while computing the $x$ that maps to $y$ is infeasible. When we say infeasible, we mean its so bloody hard it would essentially take, like, \textbf{forever}.\\
+        \\
+        There is a special subset of one way functions, known as \textbf{trapdoor one way functions}. These are so named because, while reversing them naively is infeasible, given some extra \textbf{trapdoor information}, they are \textbf{easily inverted}. An example of such a function would be the RSA algorithm, where deducing $\cm$ from $\cc$ is impossible without the necessary trapdoor information, which in the case of RSA is the private key.
+
+
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % There's actually a few more sections %
