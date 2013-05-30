@@ -12,7 +12,7 @@
     \end{itemize}
     
     \subsection{Electronic Code Book}
-    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. 
+    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}, this is ineffective to say the least, as evidenced in Figure~\ref{fig:tux}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. 
     This is terrible!\\
     \begin{figure}[htp!]
     \centering
@@ -30,7 +30,7 @@
     \textbf{IND-PASS Example:} In an indistinguishability game we decide the two messages sent to the oracle (of which one will be encrypted). Again we use the fact that the blocks are encrypted independently, and give one of the messages as a bit string concatenated onto itself, $m_0=b_1||b_1$. If the ciphertext can be split into two equal bit strings in the same way, then $m_0$ was encrypted, else $m_1$.
     
     \subsection{Cipher Block Chaining}
-    Cipher Block Chaining removes a lot of the problems with the ECB by XORing each block with the previously encrypted block --- incorporating a dependence on the previous block. The first block of the ciphertext is called the \textbf{Initalisation Vector} (IV), and is what the first block of the message is XOR-ed with.\\
+    Cipher Block Chaining removes a lot of the problems found in ECB by XORing each block with the previously encrypted block --- incorporating a dependence on the previous block. The first block of the ciphertext is called the \textbf{Initalisation Vector} (IV), and is what the first block of the message is XOR-ed with.\\
     \begin{figure}[htp!]
         \centering
         \includegraphics[width=10cm]{img/cbc}
@@ -58,19 +58,19 @@
         \begin{subfigure}[b]{0.3\textwidth}
             \centering
             \includegraphics[width=\textwidth]{img/Tux.jpg}
-            \caption{Original Image\\~}
+            \caption{Original Image}
         \end{subfigure}
         \begin{subfigure}[b]{0.3\textwidth}
             \centering
             \includegraphics[width=\textwidth]{img/Tux_ecb.jpg}
-            \caption{Encrypted using ECB\\~}
+            \caption{Encrypted using ECB}
         \end{subfigure}
         \begin{subfigure}[b]{0.3\textwidth}
             \centering
             \includegraphics[width=\textwidth]{img/Tux_secure.jpg}
-            \caption{Encrypted using Chaining}
+            \caption{Encrypted using CBC}
         \end{subfigure}
-        \caption{Bitmap image of Tux being encrypted using ECB and using another method that uses chaining.}
+        \caption{Bitmap image of Tux being encrypted using ECB and CBC.}
         \label{fig:tux}
     \end{figure}
     \\
@@ -79,7 +79,7 @@
     
     
     \subsection{Counter Mode}
-    Counter mode basically uses a stream cipher to generate a pseudo-random bit-string which can be one-time-padded with message. As Figure~\ref{fig:ctr} shows, generates a $IV$ ($IV \leftarrow \{0,1\}^n$) and increments this by one for every block. The $IV+n$ values are then put through the block cipher to generate the bit-string. In all the material, the $IV$ is refereed to as $ctr$ for this algorithm.\\
+    Counter mode basically uses a stream cipher to generate a pseudo-random bit-string which can be one-time-padded with message. As Figure~\ref{fig:ctr} shows, the algorithm generates a $IV$ ($IV \leftarrow \{0,1\}^n$) and increments this by one for every block. The $IV+n$ values are then put through the block cipher to generate the bit-string. In all the material, the $IV$ is refereed to as $ctr$ for this algorithm.\\
     \begin{figure}[htp!]
         \centering
         \includegraphics[width=0.5\textwidth]{img/ctr.png}
@@ -95,7 +95,7 @@
             $\csubc{i} = Enc_\ck(IV + i) \oplus \csubm{i}$ && $m_i = Enc_\ck(IV + i) \oplus \csubc{i}$
         \end{tabular}
     \end{center}
-    CTR mode passes the same security modes as CBC (Figure~\ref{fig:ctr-attacktable}). But it has one positive over CBC: decrypting a block as not dependent on the decryption of the previous block, meaning that we can parallelise decryption (and encryption for that matter).
+    CTR mode passes the same security modes as CBC (Figure~\ref{fig:ctr-attacktable}). But it has one positive over CBC: decrypting a block is not dependent on the decryption of the previous block, meaning that we can parallelise decryption (and encryption for that matter).
     \begin{figure}[htp!]
         \centering
         \attacktable{indcpa}
