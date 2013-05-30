@@ -134,15 +134,18 @@
 	\\
 	This is where the private key comes in. Lets focus on the portion of the equation that is hard to solve:
 	$$t = \frac{\textcolor{B}{B}^2}{4}+c$$
-	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. % TODO: I'm stopping here because at this point I'm lost. - Matt
+	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. Recall that using CRT we have the equation as follows, with as yet unknowns highlighted:
+
+	$$ t \mod N = (\mathbf{a_1} p \mathbf{y_1}) + (\mathbf{a_2} q \mathbf{y_2}) \mod N $$
+	Fortunately these are easy enough to find. % TODO: BUT HOW LOL. - Matt
 
 
 \section{ElGamal}
 
 	\subsection{The Diffie-Hellman Problems}
 
-	There are, in fact, two Diffie-Hellman problems, a computational one and a decisional one. Let $g$ be a generator for some group, and let $x, y$ and $z$ be integers. In the Computational Diffie-Hellman problem, you are given $g$, $g^x$ and $g^y$, and must compute $g^xy$. For the decisional diffie-hellman problem, you are given $g$, $g^x$, $g^y$ and $g^z$, and are required to decide if $z=xy$. ElGamal is an encryption scheme built on the assumption that both of these problems are hard.\\
-\\
+	There are, in fact, two Diffie-Hellman problems, a computational one and a decisional one. Let $g$ be a generator for some group, and let $x, y$ and $z$ be integers. In the Computational Diffie-Hellman problem, you are given $g$, $g^x$ and $g^y$, and must compute $g^xy$. For the decisional diffie-hellman problem, you are given $g$, $g^x$, $g^y$ and $g^z$, and are required to decide if $z=xy$. ElGamal is an encryption scheme built on the assumption that both of these problems are hard.
+
 	\subsection{The Algorithms}
 
 	Let $\blue{p}$ be some large prime, usually around 1024-bits. Let $\blue{q}$ be another prime, usually around 160-bits, such that $\blue{q}$ divides $\blue{p}-1$. Compute $\blue{g}$, a generator of a multiplicative group of order $\blue{q}$ -- usually the group of positive integers modulo $q$ under multiplication. $\blue{(p,q,g)}$ are the public domain parameters of the ElGamal scheme, and are part of the public key.\\
