@@ -1,6 +1,7 @@
 \chapter{Recap}
 	% Summary and comparison section
-
+	\section{Block Ciphers}
+	Block ciphers cut the message into smaller blocks to be encrypted. The \textbf{Electronic Code Book} encrypts them all individually. \textbf{Cipher Block Chaining} XORs each block of the message with the previous blocks ciphertext. The first message block is XORed with the \textit{Initialisation Vector} and that is sent in plain text as the first block of the ciphertext. \textbf{Counter Mode} generates a pseudo-random bit-string to use in a \textit{One Time Pad}. The IV is again sent in plaintext and is the seed for the cipher-stream. Each block adds one to the counter and encrypts it to get a bit-string to XOR with the message.
 	\begin{table}[htp!]
 		\centering
 		\begin{tabular}{llll}
