@@ -150,10 +150,23 @@
     \end{figure}
     \\
     Although its unlikely that the table will show all differences in the input of $s$ lead to an output difference of $t$, even a \textit{better than chance} difference gives a cryptanalyst a much smaller space for them them brute force. A perfect S-Box would have a 1 in every cell, but this is \textit{impossible}. We can measure an S-Boxes quality by how close to a \textbf{uniform distribution} it has in this table.
+    \subsection{Linear Analysis}
+        Linear analysis consists of two parts. The first is to \textbf{construct linear equations} describing relationships between the \textit{plaintext}, \textit{ciphertext} and \textit{key bits} that have a high bias; that is, whose probability of being true is close to 0 or 1.  The second is to use these linear equations in conjunction with known plaintext-ciphertext pairs to derive key bits.\\
+        \\
+        The notes write a linear equation for an S-Box has n input bits $X_i$ and m-output bits $Y_i$, as
 
-
-
-
+        \begin{equation}
+            L_{I,J} = (X_{i_1} \oplus \cdots \oplus X_{i_2}) \oplus (Y_{i_1} \oplus \cdots \oplus Y_{i_2})
+        \end{equation}
+        \begin{align*}
+            \text{where, } & I = \{i_1, \cdots ,i_u\} \subset \{1, \cdots ,n\}\\
+            & J = \{j_1, \cdots ,j_u\} \subset \{1, \cdots ,n\}
+        \end{align*}
+        because they apparently don't want you to understand it. It just means that $L$ is a function taking bits from specific positions from the input and output and XORing them all. Eg, $L_1 = X_1 \oplus X_3 \oplus X_4 \oplus Y_2$.\\
+        \\
+        For each linear equation, $L_i$, we calculate the probability that for a random input, $X$, the function will return 0: $p=Pr[L_i=0]$. To obtain the bias, we just subtract $-0.5$ from this probability, making the bias in a range of -0.5 to 0.5.\\
+        \\
+        If function has a large enough bias (either positive or negative), then we can approximate the whole cipher as a linear function. Using this method we can prove that an S-Box is non-linear.
 \section{Message Authentication}
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
