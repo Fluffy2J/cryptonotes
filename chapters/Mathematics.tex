@@ -81,7 +81,9 @@
         Anyway, back to the maths... The CRT states that $x = y \mod N$ can be reconstructed based on answers to each sub-modulus thus:
 
         $$ x = \sum\limits_{i=1}^{r} a_i N_i y_i \mod N $$
-        Where $a_i$ is the remainder modulo $n_i$, $N_i = N/n_i$, and $y_i = N_i^{-1} \mod n_i$
+        Where $a_i$ is the remainder modulo $n_i$, $N_i = N/n_i$, and $y_i = N_i^{-1} \mod n_i$\\
+        \\
+        The significant thing to note here is that this means if we know what $x$ is equal to modulo the component parts of $N$, then we know what $x$ is equal to modulo $N$.\footnote{And presumably vice versa, though not so sure about this.}
 
     
     \section{One Way Functions}
