@@ -12,7 +12,8 @@
     \end{itemize}
     
     \subsection{Electronic Code Book}
-    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. This the terrible!\\
+    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. 
+    This is terrible!\\
     \begin{figure}[htp!]
     \centering
     \attacktable{owcpa}
@@ -20,15 +21,13 @@
     \label{fig:ecb-attacktable}
     \end{figure}
     \\
-    The weakness of this mode is in the fact that the blocks of encrypted independently. This is the basis for the two attacks below, but it also means it's susceptible to \textbf{block replay}. That is where an adversary edits a bit knowing how it will affect the decrypted message. If I knew you were sending me some money, and I knew the block containing the amount you were transferring, I could change that block in the hope I would end up with a larger transaction. This could be fixed with a checksum. ECB has one positive that an error in the cipher text will not propagate to other blocks when decrypted.\\
+    The weakness of this mode lays in the fact that the blocks are encrypted independently. This is the basis for the two attacks below, but it also means it's susceptible to \textbf{block replay}. That is where an adversary edits a bit knowing how it will affect the decrypted message. If I knew you were sending me some money, and I knew the block containing the amount you were transferring, I could change that block in the hope I would end up with a larger transaction. This could be fixed with a checksum. ECB has one positive, an error in one block of the ciphertext will not propagate to other blocks during decryption.\\
     \\
-    \textbf{Proving a cryptographic system passes a security model is beyond this scope of this course}, but you should be able to give an intuitive reason. It passes OW-CPA because, with only an encryption oracle, you would have to brute-force every possible message to match it with the ciphertext. We can always make $b$ large enough so that this is not possible\footnote{This might be possible if you knew the context of the message, if you understand what is being sent and the domain of possible values of a block is relatively small. This is simply poor implementation of the encryption, however, and we don't worry about that.}. Note that all the proofs for block cipher modes assume we are using a `perfect block cipher'.\\
+    \textbf{Proving a cryptographic system passes a security model is beyond the scope of this course}, but you should be able to give an intuitive reason. It passes OW-CPA because, with only an encryption oracle, you would have to brute-force every possible message to match it with the ciphertext. We can always make $b$ large enough so that this is not possible\footnote{This might be possible if you knew the context of the message, if you understand what is being sent and the domain of possible values of a block is relatively small. This is simply poor implementation of the encryption, however, and we don't worry about that.}. Note that all the proofs for block cipher modes assume we are using a `perfect block cipher'.\\
     \\
-    \textbf{OW-CCA Example:} We can win an OW-CCA game by kind of cheating in the following way. If we have a decryption oracle, we can decrypt anything that is not the message. Since the blocks are independent, we can simply split the message in half and decrypt both individually and then concatenate the result.\\
+    \textbf{OW-CCA Example:} We can win a OW-CCA game by kind of cheating in the following way. If we have a decryption oracle, we can decrypt anything that is not the message. Since the blocks are independent, we can simply split the message in half and decrypt both individually and then concatenate the result.\\
     \\
-    \textbf{IND-PASS Example:} In an Indistinguishability game we decide the message (of which one will be encrypted). Again we use the fact that the blocks are encrypted independently, and give one of the message as a bit string concatenated onto itself, $m_0=b_1||b_1$. The ciphertext can be split into two equal bit strings in the same way, then it was that message.
-    
-    
+    \textbf{IND-PASS Example:} In an indistinguishability game we decide the two messages sent to the oracle (of which one will be encrypted). Again we use the fact that the blocks are encrypted independently, and give one of the messages as a bit string concatenated onto itself, $m_0=b_1||b_1$. If the ciphertext can be split into two equal bit strings in the same way, then $m_0$ was encrypted, else $m_1$.
     
     \subsection{Cipher Block Chaining}
     Cipher Block Chaining removes a lot of the problems with the ECB by XORing each block with the previously encrypted block --- incorporating a dependence on the previous block. The first block of the ciphertext is called the \textbf{Initalisation Vector} (IV), and is what the first block of the message is XOR-ed with.\\
