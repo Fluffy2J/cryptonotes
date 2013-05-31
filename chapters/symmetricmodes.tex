@@ -107,7 +107,7 @@
 
 
 
-\section{Block Cipher Primitives}
+\section{S-Box \& Analysis}\label{sec:sbox}
     Until now, we haven't talked about what happens in the $Enc$ function. In there, there is a mixture of \textbf{substition} of characters for other characters\footnote{Think of Caesar's cipher where a letter is moved $n$ places in the alphabet, where $n$ is defined in the key} and \textbf{permutations}, where bits (or larger groupings of bits) change position. When there is this mixture of subtition and permutation, we give it the imaginative name of a `substitution-permutation network'.\\
     \\
     One method an attacker might use is called a \textbf{known-plaintext attack}, where they have the \textit{plaintext} and \textit{ciphertext} and try work the key out from these. This means we need a large enough number of keys, so that an exhaustive keysearch is not possible. We also have to make sure that the block size is large enough, since we could store known block decryptions and decipher a large part of the ciphertext through this (\textbf{text dictionary attack}).\\
@@ -167,6 +167,141 @@
         For each linear equation, $L_i$, we calculate the probability that for a random input, $X$, the function will return 0: $p=Pr[L_i=0]$. To obtain the bias, we just subtract $-0.5$ from this probability, making the bias in a range of -0.5 to 0.5.\\
         \\
         If function has a large enough bias (either positive or negative), then we can approximate the whole cipher as a linear function. Using this method we can prove that an S-Box is non-linear.
+
+\section{AES --- Rijndael}
+    Some ciphers involve repeating a weaker `round function' to make a stronger encryption. Round functions will output bit-strings the same size of the input, and they must be a revertible one-to-one function, so that we can decrypt the ciphertext. The notation usually uses $r$ for the number of rounds, $n$ for the block size and $s$ for the key size. Each round uses a different key, and these sub-keys are all derived from the main key. A block is usually represented as a matrix holding all the bytes. Each state of the encryption is applied to the `state matrix', $s$.\\
+    \\
+    ASE is an encryption scheme which uses round functions. Its works on 128-bit blocks, uses keys of 128/192/256-bits and works on 10/12/14. Each round consists of the following operations:\\
+    \\
+    \newcommand{\leftminipagewidth}{0.3\textwidth}
+    \newcommand{\rightminipagewidth}{0.7\textwidth}
+    \begin{tabular}{ll}
+        \begin{minipage}[t]{\leftminipagewidth}
+            \textbf{Byte Substitution}\\
+            Just apply the S-Box to the block.
+        \end{minipage}
+        &
+        \begin{minipage}[t]{\rightminipagewidth}
+        $
+            \begin{pmatrix}
+                s_{0,0} & s_{0,1} & s_{0,2}\\
+                s_{1,0} & s_{1,1} & s_{1,2}\\
+                s_{2,0} & s_{2,1} & s_{2,2}
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                \mathbb{S}(s_{0,0}) & \mathbb{S}(s_{0,1}) & \mathbb{S}(s_{0,2})\\
+                \mathbb{S}(s_{1,0}) & \mathbb{S}(s_{1,1}) & \mathbb{S}(s_{1,2})\\
+                \mathbb{S}(s_{2,0}) & \mathbb{S}(s_{2,1}) & \mathbb{S}(s_{2,2})
+            \end{pmatrix}
+        $
+        \end{minipage}
+
+        \\\\
+
+        \begin{minipage}[t]{\leftminipagewidth}
+            \textbf{Shift Rows}
+            Shift a row, so that message is diffused over the columns.
+        \end{minipage}
+        &
+        \begin{minipage}[t]{\rightminipagewidth}
+        $
+            \begin{pmatrix}
+                \textcolor{red}{s_{0,0}} & \textcolor{green}{s_{0,1}} & \textcolor{blue}{s_{0,2}}\\
+                \textcolor{red}{s_{1,0}} & \textcolor{green}{s_{1,1}} & \textcolor{blue}{s_{1,2}}\\
+                \textcolor{red}{s_{2,0}} & \textcolor{green}{s_{2,1}} & \textcolor{blue}{s_{2,2}}
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                \textcolor{red}{s_{0,0}} & \textcolor{green}{s_{0,1}} & \textcolor{blue}{s_{0,2}}\\
+                \textcolor{green}{s_{1,1}} & \textcolor{blue}{s_{1,2}} & \textcolor{red}{s_{1,0}}\\
+                \textcolor{red}{s_{2,0}} & \textcolor{green}{s_{2,1}} & \textcolor{blue}{s_{2,2}}
+            \end{pmatrix}
+        $
+        \end{minipage}
+
+        \\\\
+
+        \begin{minipage}[t]{\leftminipagewidth}
+            \textbf{Mix Column}\\
+            Can choose a matrix to multiply by. Diffuses over rows. \footnotemark
+        \end{minipage}
+        &
+        \begin{minipage}[t]{\rightminipagewidth}
+        $
+            \begin{pmatrix}
+                s_{0,0} & s_{0,1} & s_{0,2}\\
+                s_{1,0} & s_{1,1} & s_{1,2}\\
+                s_{2,0} & s_{2,1} & s_{2,2}
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                2 & 3 & 1\\
+                1 & 1 & 4\\
+                3 & 1 & 1
+            \end{pmatrix}
+            \begin{pmatrix}
+                s_{0,0} & s_{0,1} & s_{0,2}\\
+                s_{1,0} & s_{1,1} & s_{1,2}\\
+                s_{2,0} & s_{2,1} & s_{2,2}
+            \end{pmatrix}
+        $
+        \end{minipage}
+
+        \\\\
+
+        \begin{minipage}[t]{\leftminipagewidth}
+            \textbf{Round Key Addition}\\
+            XOR with the round key.
+        \end{minipage}
+        &
+        \begin{minipage}[t]{\rightminipagewidth}
+        $
+            \begin{pmatrix}
+                s_{0,0} & s_{0,1} & s_{0,2}\\
+                s_{1,0} & s_{1,1} & s_{1,2}\\
+                s_{2,0} & s_{2,1} & s_{2,2}
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                k_{0,0} & k_{0,1} & k_{0,2}\\
+                k_{1,0} & k_{1,1} & k_{1,2}\\
+                k_{2,0} & k_{2,1} & k_{2,2}
+            \end{pmatrix}
+            \oplus
+            \begin{pmatrix}
+                s_{0,0} & s_{0,1} & s_{0,2}\\
+                s_{1,0} & s_{1,1} & s_{1,2}\\
+                s_{2,0} & s_{2,1} & s_{2,2}
+            \end{pmatrix}
+        $
+        \end{minipage}
+
+    \end{tabular}\\\\
+    \footnotetext{The aim is to defuse the message as much as possible, so a maximal distance algorithm is used to find the matrix which will do this the most --- you don't need to worry about that though.}
+    It's possible that you need to know they are put together in AES, so you can see the pseudo-code in Algorithm~\ref{alg:aes}. Basically, every round the sub-key is added, then the S-Box is applied, then the rows are shifted, then the columns are mixed. In the last round the columns aren't mixed though.\\
+    \begin{figure}[htp!]
+        \centering
+        \begin{algorithm}[H]
+            \SetAlgoLined
+            AddRoundKey($S$,$K_0$]);\\
+            \For{$i\leftarrow 1$ \KwTo $9$}{
+                SubBytes($S$);\\
+                ShiftRows($S$);\\
+                MixColumns($S$);\\
+                AddRoundKey($S$,$K_i$);\\
+            }
+            SubBytes($S$);\\
+            ShiftRows($S$);\\
+            \caption{AES}
+            \label{alg:aes}
+        \end{algorithm}
+    \end{figure}
+    \\
+    \textbf{Write section on Key Scheduling}\\
+    \\
+    In Section~\ref{sec:sbox}, we loo
+
 \section{Message Authentication}
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
