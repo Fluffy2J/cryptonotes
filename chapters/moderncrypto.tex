@@ -153,10 +153,12 @@ Some attacks are more powerful than others. Figure~\ref{fig:relations} show thes
 
 
 \section{Stream Ciphers}
-The idea behind a stream cipher is to replace the (possibly) huge cipher needed for the Vernam scheme by a pseudo-random sequence which is `seeded` by a key of a more practical size. There's some confusion over whether the term `stream cipher' refers to the algorithm generating the stream or the entire encryption scheme. The term can use both, but the book accompanying the unit recommends you only use it for the algorithm
-\begin{figure}
-    %\includegraphic[width=\textwidth]{img/streamchipher.png}
-    \caption{A stream cipher using a DFA where keys determine state update ($\csubk{1}$), initial state ($\csubk{2}$) and output filter ($\csubk{3}$)}
+The idea behind a stream cipher is to replace the (possibly) huge cipher needed for the One-Time-Pad scheme by a pseudo-random sequence which is `seeded' by a key of a more practical size. There's some confusion over whether the term `stream cipher' refers to the algorithm generating the stream or the entire encryption scheme. The term can mean both, but the book accompanying the unit recommends you only use it for the algorithm.\\
+\begin{figure}[htp!]
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{img/streamcipher}
+        \caption{A stream cipher using a DFA where keys determine state update ($\csubk{1}$), initial state ($\csubk{2}$) and output filter ($\csubk{3}$)}
+    \end{center}
 \end{figure}
 \\
 One model of a stream cipher is of a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
