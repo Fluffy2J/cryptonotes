@@ -1,16 +1,12 @@
 \chapter{Modern Cryptographic Definitions}
 
 
-\section{The Base Principles of Modern Cryptography}
+\section{The Three Principles of Modern Cryptology}
 
 \begin{enumerate}
-    \item \textbf{Principle 1:} \textcolor{R}{The first step in solving any cryptographic problem is formulating a rigorous and precise
-definition of security.}
-    \item \textbf{Principle 2:} \textcolor{B}{When a cryptographic system relies on an unproven assumption, it must be precisely
-stated. Furthermore, this assumption must be minimal.}
-    \item \textbf{Principle 3:} \textcolor{G}{Cryptographic constructions must be accompanied by a rigorous proof of security
-with respect of a definition formulated in principle 1, revolving around the assumptions stated in
-principle 2 (if any).}
+    \item Formulate a rigorous and \textbf{precise definition of security}.
+    \item When a cryptographic system relies on an \textbf{unproven assumption}, it must be \textbf{precisely stated}. Furthermore, this assumption \textbf{must be minimal}.
+    \item Cryptographic constructions must be accompanied by a \textbf{rigorous proof of security} with respect to the definition formulated in principle 1, revolving around the assumptions stated in principle 2.
 \end{enumerate}
 
 \subsection{Principle 1: Formulation of Exact Definitions}
@@ -27,17 +23,17 @@ application.
         \item \textbf{Importance for study:} For researching different types of cryptographic systems
 we need to be able to compare them and measure their security level. Without
 a rigorous proof of security the only performance attribute we can measure is
-efficiency(which is not very accurate).
+efficiency (which is not very accurate).
     \end{itemize}
     \item \textbf{How do we define security?}
     \begin{itemize}
-        \item \textcolor{R}{An encryption scheme is secure if no adversary can compute any function of the
-plaintext from the cipher text.}
-        \item \textcolor{B}{An encryption scheme is considered broken if an adversary learns some function of
-the plaintext from the cipher text.}
-        \item \textcolor{G}{The power of the adversary relates to assumptions regarding the actions the
-adversary is assumed to be able to take, as well as the adversary`s computational
-power.}
+        \item An encryption scheme is secure if no adversary can compute any function of the
+plaintext from the cipher text.
+        \item An encryption scheme is considered broken if an adversary learns some function of
+the plaintext from the cipher text.
+        \item The power of the adversary relates to assumptions regarding the actions the
+adversary is assumed to be able to take, as well as the adversary's computational
+power.
     \end{itemize}
 \end{itemize}
 
@@ -46,17 +42,14 @@ power.}
 Most cryptographic constructions cannot be proven secure unconditionally, therefore it relies on some assumptions which must be precisely stated for the following reasons:
 
 \begin{enumerate}
-\item \textbf{Validation of the assumption} If the assumption being relied upon is not precisely stated and presented it cannot ber studied and potentially refuted.
+\item \textbf{Validation of the assumption} If the assumption being relied upon is not precisely stated and presented it cannot be studied and potentially refuted.
 \item \textbf{Comparison of schemes} If the assumptions used by two schemes are incomparable, then the one based on the better-studied or the simpler assumptions is preferred.
-\item \textbf{Facilitation of proofs of security} A mathematical proof that ``the construction is secure if assumption is true'' cannot be provided without a precises statement of what the assumption is.
+\item \textbf{Facilitation of proofs of security} A mathematical proof that ``the construction is secure if the assumption holds'' cannot be provided without a precise statement of what the assumption is.
 \end{enumerate}
 
 \subsection{Principle 3: Rigorous Proofs of Security}
 
-The first two principles lead naturally to this one
-
-Most proofs in modern cryptography use ``the reductionist approach'':\\\\
-    \textit{``Given the Assumption A is true, Construction C is secure according to the given definition.''}
+The first two principles lead naturally to this one. Most proofs in modern cryptography use the \textbf{reductionist} approach, that is, \textit{``Given the Assumption A is true, Construction C is secure according to the given definition.''}
 
 \section{Cryptographic Games}
 
@@ -64,9 +57,9 @@ We can capture a notion of security by a picture representing a game played with
 
 \subsection{Indistinguishability (IND-Security)}
 
-Indistinguishability is measure of security where by an adversary can give you two messages, and if you were to encrypt only one of them, he/she would not be able to know \textbf{which one you have encrypted}.\\
+Indistinguishability is a measure of security whereby an adversary offers you (the challenger) two messages, and if you were to encrypt only one of them, he / she would be unable to tell \textbf{which one you have encrypted}.\\
 \\
-Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this for a symmetric cryptographic scheme. $\csubm{0}$ and $\csubm{1}$ are the two messages the adversary gives you and the $\ccast$ is the ciphertext you computed of one of the messages. $b'$ is the answer the adversary gives. Note that $|\csubm{0}|=|\csubm{1}|$, since a difference in size would give the game away.\\
+Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this for a symmetric cryptographic scheme. $\csubm{0}$ and $\csubm{1}$ are the two messages the adversary gives you and $\ccast$ is the ciphertext you computed from one of the messages. $b'$ is the answer the adversary gives. Note that $|\csubm{0}|=|\csubm{1}|$, since a difference in size would be a dead give away.\\
 \begin{figure}[htp!]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -85,7 +78,7 @@ Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this fo
         \begin{cryptogame}{$b\in \{0,1\}$}
             \cgameright{$\cpk$}
             \cgameleft{$\csubm{0},\csubm{1}$}
-            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
+            \cgameright{$\ccast=\textrm{Enc}_{\csk}(\csubm{b})$}
             \cgameleft{$b'$}
         \end{cryptogame}
         \caption{Public Key Case}
@@ -95,9 +88,9 @@ Figure~\ref{fig:ind-sec-sym} shows the cryptographic game which captures this fo
     \label{fig:ind-sec}
 \end{figure}
 \\
-Figure~\ref{fig:ind-sec-pub} gives the same but for public key encryption. $pk$ is the publicly available key, which all adversaries would have access to while trying to crack your message.\\
+Figure~\ref{fig:ind-sec-pub} shows the game design for public key encryption. $\cpk$ is the publicly available key, which all adversaries would have access to while trying to crack your message.\\
 \\
-A cryptographic system fails a game if an adversary can win the game more than chance.
+A cryptographic system fails a game if an adversary can win the game more often than chance (i.e. $> 50\%$ success rate).
 
 \subsection{One-wayness (OW-Security)}
 
@@ -115,12 +108,13 @@ One-wayness is the property that an attacker, with only the ciphertext, \textbf{
         \label{fig:ow-sec-sym}
     \end{subfigure}
     ~
+    % TODO: This game is identical to public key IND-Security. Somethings not right here.
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \begin{cryptogame}{$b\in \{0,1\}$}
             \cgameright{$\cpk$}
             \cgameleft{$\csubm{0},\csubm{1}$}
-            \cgameright{$\ccast=\textrm{Enc}_\ck(\csubm{b})$}
+            \cgameright{$\ccast=\textrm{Enc}_{\csk}(\csubm{b})$}
             \cgameleft{$b'$}
         \end{cryptogame}
         \caption{Public Key Case}
@@ -137,10 +131,10 @@ These attacks also have defined `adversarial powers', where the adversary has ac
     \item \textbf{Chosen Plaintext Attack (CPA)}: The adversary can encrypt any mesage of his/her choosing.
     \item \textbf{Chosen Ciphertext Attack (CCA)}: The adversary can decrypt any message of his choosing, except he is not allowed to decrypt $\ccast$.
 \end{itemize}
-We assume that if an adversary has access to a decryption oracle, then they have access to the encryption one. This is apparently not true for one case we will see later... There is also no notion of a passive attack for public key encryption because the public key (which is used to encrypt) is public, so will always be accessible.
+We assume that if an adversary has access to a decryption oracle, then they have access to the encryption one, so CCA is an extension of CPA\footnote{Except in one case we will see later on concerning hybrid encryption schemes.}. There is no notion of a passive attack for public key encryption because the public key (which is used to encrypt) is public, so the adversary always has an encryption oracle.
 
 \section{Reductions}
-We can make comparisons of problems by reducing one to another, there by defining one as `no harder' than the other. A reduction is where we can, in polynomial time, convert a problems into another one. We say \textbf{Problem A is no harder than Problem B} if we can convert Problem A into Problem B. This is written as \boldmath $A \leq_P B$ \unboldmath\\
+We can make comparisons of problems by reducing one to another, thereby defining one as `no harder' than the other. A reduction is where we can, in polynomial time, convert a problem into another one. We say \textbf{Problem A is no harder than Problem B} if we can convert Problem A into Problem B. This is written as \boldmath $A \leq_P B$ \unboldmath.\\
 \begin{figure}[htp!]
     \begin{center}
         \begin{tabular}{ccccc}
@@ -159,14 +153,16 @@ Some attacks are more powerful than others. Figure~\ref{fig:relations} show thes
 
 
 \section{Stream Ciphers}
-The idea behind a stream cipher is to replace the (possibly) huge cipher needed for the Vernam scheme by a pseudo-random sequence which is `seeded` by a key of a more practical size. There's some confusion over whether the term `stream cipher' refers to the algorithm generating the stream or the entire encryption scheme. The term can use both, but the book accompanying the unit recommends you only use it for the algorithm
-\begin{figure}
-    %\includegraphic[width=\textwidth]{img/streamchipher.png}
-    \caption{A stream cipher using a DFA where keys determine state update ($\csubk{1}$), initial state ($\csubk{2}$) and output filter ($\csubk{3}$)}
+The idea behind a stream cipher is to replace the (possibly) huge cipher needed for the One-Time-Pad scheme by a pseudo-random sequence which is `seeded' by a key of a more practical size. There's some confusion over whether the term `stream cipher' refers to the algorithm generating the stream or the entire encryption scheme. The term can mean both, but the book accompanying the unit recommends you only use it for the algorithm.\\
+\begin{figure}[htp!]
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{img/streamcipher}
+        \caption{A stream cipher using a DFA where keys determine state update ($\csubk{1}$), initial state ($\csubk{2}$) and output filter ($\csubk{3}$)}
+    \end{center}
 \end{figure}
 \\
-One model of a stream cipher is of a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
+One model of a stream cipher is a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
 \\
-One source for confusion may come from that fact that the slides use $\csubk{x}$ to for both the key values which are inputted into the stream cipher and for the keystream, which is the output of the stream cipher.\\
+One source for confusion may come from that fact that the slides use $\csubk{x}$ to mean both the key values which are input into the stream cipher, and for the keystream, which is the output of the stream cipher.\\
 \\
-Decryption is easy as both sender and receiver use key to generate the keystream of necessary size. This possible because the algorithm is deterministic, which, as meantioned later, is a source of weakness.
+Decryption is easy as both sender and receiver use one key to generate the keystream of necessary size. This is possible because the algorithm is deterministic, which, as mentioned later, is a source of weakness.

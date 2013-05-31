@@ -110,7 +110,7 @@
 \section{S-Box \& Analysis}\label{sec:sbox}
     Until now, we haven't talked about what happens in the $Enc$ function. In there, there is a mixture of \textbf{substition} of characters for other characters\footnote{Think of Caesar's cipher where a letter is moved $n$ places in the alphabet, where $n$ is defined in the key} and \textbf{permutations}, where bits (or larger groupings of bits) change position. When there is this mixture of subtition and permutation, we give it the imaginative name of a `substitution-permutation network'.\\
     \\
-    One method an attacker might use is called a \textbf{known-plaintext attack}, where they have the \textit{plaintext} and \textit{ciphertext} and try work the key out from these. This means we need a large enough number of keys, so that an exhaustive keysearch is not possible. We also have to make sure that the block size is large enough, since we could store known block decryptions and decipher a large part of the ciphertext through this (\textbf{text dictionary attack}).\\
+    One method an attacker might use is called a \textbf{known-plaintext attack}, where they have the \textit{plaintext} and \textit{ciphertext} and try to work the key out from these. This means we need a large number of keys, so that an exhaustive keysearch is not possible. We also have to make sure that the block size is large enough, since we could store known block decryptions and decipher a large part of the ciphertext through this (\textbf{text dictionary attack}).\\
     \begin{table}[htp!]
         \centering
         \begin{tabular}{lccccccccccccccccccccccccccc}
@@ -125,6 +125,7 @@
     \end{table}
     \\
     An \textbf{S-Box} is a mapping of bit-strings to other bit-strings, theses do not have to be the same length, but if they are not, the output is almost always of a shorter length. Table~\ref{fig:lookupsbox} shows an example of an S-Box which maps 4-bit strings to 4-bit strings. We want to make the substitution as \textbf{non-linear} as possible. Formally, it would be linear if Equation~\ref{equ:sboxlin} was true, or at least was true was large probability.
+    % FIXME: Line above ends in confusing way.
     
     \subsection{Differential Analysis}
     At the heart of a number of the techniques used to successfully beat crypto games in Section~\ref{sec:blockciphermodes}, was that we get around the constraint of not being allowed to send the message or ciphertext to an oracle by changing it into something we know will still give us something useful. With a linear S-Box, we (as an attacker) would be able to transform the message/ciphertext and then perform another transformation on the oracles response.
@@ -139,7 +140,7 @@
     \end{equation}
     To find patterns that we can exploit to do this, we perform \textbf{differential analysis} on the S-Box. Differential analysis \textit{tabulate[s] specific differences in the input that lead to specific differences in the output with probability greater than would be expected for a random permutation}. This would tell us whether adding 5 to the input will always give us an output 10 too large.\\
     \\
-    To do this, we make a table with all the inputs against all the outputs. Then we take \textbf{every pair of inputs}, $(s_1,s_2)$, calculate there difference, $\Delta s=s_1\oplus s_2$, and the the difference between the outputs of those inputs, $\Delta t = \mathbb{S}(s_1) \oplus \mathbb{S}(s_2)$. Figure~\ref{fig:diffanalpair} gives an example of this. For each pair, we add one to the value at $(\Delta s,\Delta t)$, so that cell $(s,t)$ gives us the number of times a difference of $s$ in the input caused a difference in $t$ in the output.\\
+    To do this, we make a table with all the inputs against all the outputs. Then we take \textbf{every pair of inputs}, $(s_1,s_2)$, calculate there difference, $\Delta s=s_1\oplus s_2$, and the the difference between the outputs of those inputs, $\Delta t = \mathbb{S}(s_1) \oplus \mathbb{S}(s_2)$. Figure~\ref{fig:diffanalpair} gives an example of this. For each pair, we add one to the value at $(\Delta s,\Delta t)$, so that cell $(s,t)$ gives us the number of times a difference of $s$ in the input caused a difference in $t$ in the output.
     \begin{figure}[htp!]
         \begin{align*}
             s_1=3=0011_2   && t_1=\mathbb{S}(s_1) = 1 &= 0001_2  &&  \Delta s=s_1\oplus s_2=5=0101_2\\
@@ -314,29 +315,26 @@
     \begin{figure}[htp!]
         \centering
         MAC = $h_{\ck}(\cm)$
-    \end{figure}\\
-    \\
+    \end{figure}
     You would then typically send the MAC concatenated at the end of the message. The hash function, as per Kerckhoff's principle, is publicly described. Given $\ck$ and $\cm$, computing $h_{\ck}(\cm)$ should be easy.
     Given only $\cm$, computing a correct hash should be very difficult, even if several message-to-hash pairs are already known.\\
     \\
-    A hash function is simply a surjective mapping from arbritrarily long strings to fixed length hash strings. \\
-    \\
+    A hash function is simply a surjective mapping from arbitrarily long strings to fixed length hash strings.
+
     \subsection{Security Model}
     Our security models are simple:
     \begin{itemize}
         \item \textbf{EF-PASS}: The passive attack where the bad guy can generate a valid MAC for any message, gibberish or otherwise. 
-        `Existential' forgery is where the message may just be random rubbish, `Selective' forgery is creating a MAC for a specific message.
+        \textbf{Existential} forgery is where the message may just be random rubbish, \textbf{Selective} forgery is creating a MAC for a specific message.
 
-        \item \textbf{EF-CMA}: As above, but the douche of an adversary has an oracle that can perform MAC generation on other messages of his choice (but not the target message). This is the `Chosen Message' Attack
+        \item \textbf{EF-CMA}: As above, but the douche of an adversary has an oracle that can perform MAC generation on other messages of his choice (but not the target message). This is the \textbf{Chosen Message Attack}
     \end{itemize}
-
     We will now look at two games for Existential Forgery; as a MAC may be probabilistic, we define two algorithms for these games:
 
     \begin{itemize}
-        \item $\textbf{MAC}_{k}(m)$: Generates the MAC for message \emph{m}.
-        \item $V_{k}(m, c)$: A boolean-returning verification function. True is good. False is bad. Get with the program, kids. Also this may not simply be a case of recomputing the MAC; if the algorithm that generates it is probabilistic, we need other methods of checking correctness.
+        \item $\textbf{MAC}_{\ck}(\cm)$: Generates the MAC for message \emph{\cm}.
+        \item $V_{\ck}(\cm, \cc)$: A boolean-returning verification function. True is good. False is bad. Get with the program, kids. Also this may not simply be a case of recomputing the MAC; if the algorithm that generates it is probabilistic, we need other methods of checking correctness.
     \end{itemize}
-
     It is a given that our opponent has access to a Verification Oracle (otherwise how will they know if they have cracked it?). 
 
     \begin{figure}[htp!]
@@ -371,8 +369,8 @@
 
     There exists a `Strong Forgery' variant of \textbf{EF-CMA} called, unsuprisingly, \textbf{SF-CMA}, which changes the restriction on the MAC oracle to be that whilst $\cmast$ can be passed to the oracle, $\ccast$ must not have been returned.\\
     \\
-    Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!\\
-    \\
+    Assuming we can create a MAC function that achieves this, we can now make INC-CCA symmetric encryption schemes! Hooray!
+
     \subsection{IND-CCA Here We Come}
     The reason that CBC and CTR modes, whilst groovy, were not \textbf{IND-CCA} was that an attacker could look at our ciphertext and construct a related one which could be decrypted through their oracle, giving them a related plaintext.
 
@@ -392,7 +390,7 @@
             \textbf{Encrypt}
             \begin{enumerate}
                 \item Split $\ck$ into $\csubk{0}$ and $\csubk{1}$
-                \item $\csubc{0} = E_{\csubk{0}}(m)$
+                \item $\csubc{0} = E_{\csubk{0}}(\cm)$
                 \item $\csubc{1} = MAC_{\csubk{1}}(\csubc{0})$
                 \item And voila: $\cc = (\csubc{0}, \csubc{1})$
             \end{enumerate}
@@ -431,7 +429,7 @@
     \subsection{CBC-MAC}
     CBC-MAC is pretty much a straightforward application of a block cipher (like DES or AES). We just have to add the MAC on after padding the ciphertext.\\
     \\
-    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $\csubm{1}, \csubm{2}...m_{q}$, we would do as follows:\\
+    Given our cipher, which operates on blocks of \emph{b} bits, we can make a MAC really simply; assuming we have \emph{q} data blocks in our message, $\csubm{1}, \csubm{2}...m_{q}$, we would do as follows:
 
     \begin{enumerate}
         \item Set initial intermediate variables: $I_{1} = \csubm{1}, O_{1} = e_{\ck}(I_{1})$
@@ -443,35 +441,32 @@
         \item Do any post-processing you want on $O_{q}$.
         \item Truncate if necessary to $m$ bits and serve piping hot.
     \end{enumerate}
-
     In terms of padding the ciphertext, there are 3 schemes suggested in those groovy groovy standards. All of these pad to a whole number of blocks.
     \begin{itemize}
         \item Just add zeroes. Easy, right?
         \item Add a single 1, then trail out with zeroes.
         \item Pad with zeroes until you get a whole number of blocks, then add a block containing the length of the unpadded message.
     \end{itemize}
-
     In terms of optional post-processing, there are two specified methods:
     \begin{itemize}
-        \item Choose another key, $\csubk{1}$, and replace $O_{q}$ with $e_{\ck}(d_{\csubk{1}}(O_{q})$
+        \item Choose another key, $\csubk{1}$, and replace $O_{q}$ with $e_{\ck}(d_{\csubk{1}}(O_{q}))$
         \item Choose another key, $\csubk{1}$, and replace $O_{q}$ with $e_{\ck_{1}}(O_{\cq})$ 
     \end{itemize}
-
     Either one of those can make it much harder to do a brute force search for $k$. Which is a good thing, young padawan. Oh yes.
 
     \subsection{Hashing}
-    Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.
-
-    Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is an CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash. TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.
-
-    I know that earlier I talked about hashing with a key, but in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:
+    Like we said, hashing in this case is just an efficient function mapping arbritrarily long binary strings to fixed length binary strings. Simples.\\
+    \\
+    Incidentally, these hashes are essentially MCDs, though they are not called that now. Used to be the case that you'd do a hash (MDC), concatenate it to the message and then encrypt that. The problem with a concatenate-then-encrypt scheme under CBC is that an attacker can create a message that consists of the message they wish to send, a hash for it, and then some other random guff, and then hash that (this is a CPA method). If the attack then truncates the resulting ciphertext they get their valid target ciphertext, complete with hash.\\
+    % TODO: EXPLAIN THIS BETTER DRUMMOND YOU CRAZY MAN.
+    \\
+    While earlier we talked about hashing with a key, in practice hash functions don't have a key. It is often simpler to consider a family of functions, and require three conditions of them:
     \begin{enumerate}
-        \item Preimage Resistance: given $\cc = h(\cm)$, hard to find another $m^{'}$ such that $h(m^{'} = c = h(\cm)$
-        \item 2nd Preimage Resistance: The same as preimage resistance, except that we are also given $m$.
-        \item Collision Resistance: hard to find $\cm, m^{'} \neq \cm$ such that $h(\cm) = h(m^{'}$
+        \item Preimage Resistance: given $\cc = h(\cm)$, hard to find another $\cm^{'}$ such that $h(\cm^{'}) = \cc = h(\cm)$
+        \item 2nd Preimage Resistance: The same as preimage resistance, except that we are also given $\cm$.
+        \item Collision Resistance: hard to find $\cm, \cm^{'} \neq \cm$ such that $h(\cm) = h(\cm^{'})$
     \end{enumerate}
-
-    Typical practical choices for a cryptographic hash are the SHA family, or the RIPEMD family.
+    Typical practical choices for a cryptographic hash are the SHA family, or the RIPEMD family. % What the fuck is a RIPEMD? Sounds bad lol. - Matt
 
     \subsection{From Hash To MAC}
 
@@ -479,23 +474,19 @@
     \begin{itemize}
         \item With prefixing it is possible to calculate $MAC_{\ck}(\cm||\cm^{'})$ without knowing the key. Simply split your intended message in half, and you're good to go. Exact method not shown in notes.
         \item Suffixing suffers from a weakness that makes it easier to find collisions in the hash function; this can be done offline, as well, so you do not need to send lots of queries to the target. Exact methodology not disclosed in notes.
-        \item Envelope method with padding: The reason this isn't secure isn't given in the notes, and I can't find it online. TODO: SOMEONE HELP ME OH GOD PLEASE
+        \item Envelope method with padding: The reason this isn't secure isn't given in the notes, and I can't find it online. % TODO: SOMEONE HELP ME OH GOD PLEASE
     \end{itemize}
-
-    It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):\\
+    It is better to use HMAC (keyed-\textbf{H}ash \textbf{M}essage \textbf{A}uthentication \textbf{C}ode):
     $$HMAC_{\ck}(\cm) = h(\ck||p_{1}||h(\ck||p_{2}||\cm))$$
-    \\
     Where $p_{1}$ and $p_{2}$ are fixed strings used to pad $\ck$ to a full block.\\
     \\
     You can use both MDC and MAC for data integrity, with or without confidentiality.\\
     \\
-
     Without confidentiality:
     \begin{itemize}
         \item \textbf{MAC}: compute $MAC_{\ck}(\cm)$ and send $\cm||MAC_{\ck}(\cm)$
-        \item \textbf{MDC}: Send h(m) over a seperate, authenticated channel.
+        \item \textbf{MDC}: Send $h(\cm)$ over a seperate, authenticated channel.
     \end{itemize}
-
     With confidentiality:
     \begin{itemize}
         \item \textbf{MAC}: need two different keys, $k_{1}$ and $k_{2}$
