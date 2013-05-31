@@ -197,3 +197,10 @@ QED\\
 \begin{flushright}
 QED\\
 \end{flushright}
+	ElGamal is not OW-CCA secure, since it is malleable. Given $c=(g^k,mh^k)$, we can compute $c'=(g^k,2mh^k) \neq c$. Sending $c'$ to the decryption oracle will yield $m' \cong 2m \mod p$. From here, $m$ is trivially recoverable.\\
+\\
+	In summary, ElGamal is secure against all CPAs, and against no CCAs.\\
+
+\section{A Brief Word on Proofs}
+
+	This chapter has been heavy on proofs and other associated mathematical arguments, and it is probably tempting to attempt to memorise them. This is almost certainly a bad idea. Being able to recite proofs from memory is usually worthless. I've tried to be as verbose as possible in describing these proofs, so that their details and associated techniques are clear. The exam is far more likely to test on techniques than it is to test on memorisation.
