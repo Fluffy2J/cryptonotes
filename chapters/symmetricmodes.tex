@@ -301,8 +301,39 @@
     \\
     \textbf{Write section on Key Scheduling}\\
     \\
-    In Section~\ref{sec:sbox}, we loo
-
+    Clearly we can't just use any S-Box, they have to not be susceptible to differential and linear analysis. It can be broken down into two sections:
+    \begin{enumerate}
+        \item[a)] \textbf{Multiplicative Inverse}: Remember the multiplicative inverse, $x^{-1}$, of $x$ is the number in the finite space for which $x\cdot x^{-1}=1$. So in this context, we want $x\cdot x^{-1} \mod 2^8 = 1$. It must equal 1 because 1 is the identity number for multiplication ($x\cdot I=x$). We count zeros inverse as zero.
+        \item[b)] \textbf{Linear map} over $\mathbb{F}_2$, which just means its XORed with a bit-string.
+    \end{enumerate}
+    Put them together, and you make the equation of the form $\mathbb{S}(x)=A^{-1}+c$. And it turns out, because of the modular arithmetic\footnote{I think...}, it can actually be placed in the form $\mathbb{S}(x) = A'x\oplus c'$. The actual formula is below, where $y_n$ is the $n^\textrm{th}$-bit in the output of the S-Box.\\
+    \begin{equation}
+        \begin{pmatrix}
+            y0\\y1\\y2\\y3\\y4\\y5\\y6\\y7
+        \end{pmatrix}
+        =
+        \begin{pmatrix}
+            1&0&0&0&1&1&1&1\\
+            1&1&0&0&0&1&1&1\\
+            1&1&1&0&0&0&1&1\\
+            1&1&1&1&0&0&0&1\\
+            1&1&1&1&1&0&0&0\\
+            0&1&1&1&1&1&0&0\\
+            0&0&1&1&1&1&1&1\\
+            0&0&0&1&1&1&1&1
+        \end{pmatrix}
+        \cdot
+        \begin{pmatrix}
+            x0\\x1\\x2\\x3\\x4\\x5\\x6\\x7
+        \end{pmatrix}
+        \oplus
+        \begin{pmatrix}
+            1\\1\\0\\0\\0\\1\\1\\0
+        \end{pmatrix}
+    \end{equation}
+    
+    \subsection{Why?}
+    
 \section{Message Authentication}
     \subsection{Why Do This}
         Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
