@@ -77,9 +77,22 @@
 		\\
 		Due to this malleability, vanilla RSA is \textbf{not OW-CCA} secure. Recall in a CCA we are allowed to decrypt any ciphertext \textit{besides the target ciphertext}. However, we now know how to manipulate the ciphertext while leaving the original message relatively unharmed. As such, to recover $\cm$, we simply compute $c' = \cc*2^e \mod N$, then decrypt $c'$, giving $m' = \cm * 2$. Recovering $\cm$ is now trivial.
 
+	\subsection{Attacking RSA}
+		\subsubsection{Indirect Factoring}
+			Given any private key, $\cd$, it is possible to factor the $\cN$ associated with it. In its self this isn't particularly interesting; if you have the private key, does it really matter if you can use it to break the public key?\\
+			\\
+			The interesting bit comes from the fact that the same process can be used to factor $\cN$ with $\phi(\cN)$.
+
+			$$ \cp + \cq = \cN + 1 - \phi(\cN) $$
+
+		\subsubsection{Shared Modulus}
+
+		\subsubsection{Small Exponent}
+
+		\subsubsection{Determinism}
 
 \section{Signatures}
-
+	... TODO ...
 
 
 \section{Hybrid Encryption}
@@ -134,13 +147,10 @@
 	\\
 	This is where the private key comes in. Lets focus on the portion of the equation that is hard to solve:
 	$$t = \frac{\textcolor{B}{B}^2}{4}+c$$
-	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve $\mod N$. Recall that using CRT we have the equation as follows, with as yet unknowns highlighted:
-
-	$$ t \mod N = (\mathbf{a_1} p \mathbf{y_1}) + (\mathbf{a_2} q \mathbf{y_2}) \mod N $$
-	Fortunately these are easy enough to find. % TODO: BUT HOW LOL. - Matt
-
+	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve modulo $N$. Fortunately, the actual method beyond this point is outside the scope of the unit, so breathe a sigh of relief and move on to...
 
 \section{ElGamal}
+	ElGamal is an encryption scheme built around the Diffie-Hellman problems.
 
 	\subsection{The Diffie-Hellman Problems}
 
@@ -176,7 +186,10 @@
 	\end{align*}
 	So decryption inverts encryption.\\\vspace{5mm}
 \\
-	ElGamal is OW-CPA under the assumption that the Computational Diffie Hellman problem is hard. Proving this is a little more difficult than with RSA, so pay attention.\\
+	\subsection{Security}
+	ElGamal's proofs of security are a little more difficult than they were with RSA, so pay attention. They all rely on assumptions about the Diffie-Hellman problems.\\
+\\
+	ElGamal is OW-CPA secure under the assumption that the Computational Diffie Hellman problem is hard.\\
 \\
 	Suppose there exists some adversary against ElGamal encryption. Given only public information, ie the domain parameters and a ciphertext, this adversary will recover the message within the cipher. We intend to exploit this adversary to solve the Computational Diffie Hellman problem, that is send it $g^x$ and $g^y$, and somehow recover $g^xy$.\\
 \\
@@ -184,5 +197,24 @@
 \\
 	This gives us a contradiction, since the Computational Diffie Hellman problem is hard, so the supposed OW-CPA adversary against ElGamal cannot exist.
 \begin{flushright}
-QED
+QED\\
 \end{flushright}
+	ElGamal is IND-CPA secure under the assumption that the Decisional Diffie Hellman problem is hard.\\
+\\
+	Suppose there exists some IND-CPA adversary against ElGamal. Given only public information, this adversary can send us a pair of messages, we can ``encrypt" one under ElGamal, and it will tell us which one we have ``encrypted". This quote marks are necessary, since we won't be performaing standard ElGamal encryption. We will exploit this adversary by packaging up $g^x$, $g^y$ and $g^z$ in our challenge, and using the results to solve the Decisional Diffie Hellman problem for us.\\
+\\
+	Start by sending a public key of $g^x$ to the adversary. When the adversary sends $m_0$ and $m_1$, return $c = (g^y, m_0g^z)$. This means that the $k$ chosen in ElGamal encryption is equal to $y$, and so for this ciphertext to correspond to $m_0$, it must also be the case that $z = xy$.\\
+\\
+	If the adversary returns $b=0$, then this ciphertext must correspond to $m_0$, and so $z=xy$. If $z \neq xy$, there is no defined behavior for the adversary, but it cannot return $b=0$ since this would be incorrect. From this information, we can then easily solve an instance of the Decisional Diffie Hellman problem.\\
+\\
+	This gives us a contradiction, since the Decisional Diffie Hellman problem is hard, so the supposed IND-CPA adversary against ElGamal cannot exist.
+\begin{flushright}
+QED\\
+\end{flushright}
+	ElGamal is not OW-CCA secure, since it is malleable. Given $c=(g^k,mh^k)$, we can compute $c'=(g^k,2mh^k) \neq c$. Sending $c'$ to the decryption oracle will yield $m' \cong 2m \mod p$. From here, $m$ is trivially recoverable.\\
+\\
+	In summary, ElGamal is secure against all CPAs, and against no CCAs.\\
+
+\section{A Brief Word on Proofs}
+
+	This chapter has been heavy on proofs and other associated mathematical arguments, and it is probably tempting to attempt to memorise them. This is almost certainly a bad idea. Being able to recite proofs from memory is usually worthless. I've tried to be as verbose as possible in describing these proofs, so that their details and associated techniques are clear. The exam is far more likely to test on techniques than it is to test on memorisation.
