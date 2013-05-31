@@ -77,9 +77,22 @@
 		\\
 		Due to this malleability, vanilla RSA is \textbf{not OW-CCA} secure. Recall in a CCA we are allowed to decrypt any ciphertext \textit{besides the target ciphertext}. However, we now know how to manipulate the ciphertext while leaving the original message relatively unharmed. As such, to recover $\cm$, we simply compute $c' = \cc*2^e \mod N$, then decrypt $c'$, giving $m' = \cm * 2$. Recovering $\cm$ is now trivial.
 
+	\subsection{Attacking RSA}
+		\subsubsection{Indirect Factoring}
+			Given any private key, $\cd$, it is possible to factor the $\cN$ associated with it. In its self this isn't particularly interesting; if you have the private key, does it really matter if you can use it to break the public key?\\
+			\\
+			The interesting bit comes from the fact that the same process can be used to factor $\cN$ with $\phi(\cN)$.
+
+			$$ \cp + \cq = \cN + 1 - \phi(\cN) $$
+
+		\subsubsection{Shared Modulus}
+
+		\subsubsection{Small Exponent}
+
+		\subsubsection{Determinism}
 
 \section{Signatures}
-
+	... TODO ...
 
 
 \section{Hybrid Encryption}
@@ -137,6 +150,7 @@
 	We instead now solve $\sqrt{t} = \pm x\mod p $ and $\sqrt{t} = \pm y \mod q$. The final step is to make use of the CRT to solve modulo $N$. Fortunately, the actual method beyond this point is outside the scope of the unit, so breathe a sigh of relief and move on to...
 
 \section{ElGamal}
+	ElGamal is an encryption scheme built around the Diffie-Hellman problems.
 
 	\subsection{The Diffie-Hellman Problems}
 
