@@ -1,9 +1,9 @@
 \chaptersub{Symmetric Modes}{Private Key Cryptography}
 
 \section{Block Cipher Modes}\label{sec:blockciphermodes}
-    A \textbf{block cipher} is type of encryption based on \textbf{permutation}, where they key, $\{0,1\}^k$, defines a transposition of bits in the block to the encrypted, $\{0,1\}^b$. The block is a proportion of the message.\\
+    A \textbf{block cipher} is type of encryption based on \textbf{permutation}, where they key, $\{0,1\}^k$, defines a transposition of bits in the block to the encrypted ciphertext block, $\{0,1\}^b$. The block is a proportion of the message.\\
     \\
-    DES was the first civilian block cipher and was developed at IBM in the 1970s. When the US government adopted it, they recommended the following four ways to use it, these are now used with any block cipher.
+    DES was the first civilian block cipher and was developed at IBM in the 1970s. When the US government adopted it, they recommended the following four ways to use it; these are now used with any block cipher.
     \begin{itemize}
         \item Electronic Code Book
         \item Cipher Block Chaining
@@ -12,7 +12,7 @@
     \end{itemize}
     
     \subsection{Electronic Code Book}
-    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}, this is ineffective to say the least, as evidenced in Figure~\ref{fig:tux}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. 
+    This is a very simple, it \textbf{divides} the message into blocks of size $b$, pads the last one, and \textbf{encrypts them all individually}. This is ineffective to say the least, as evidenced in Figure~\ref{fig:tux}. A block cipher using ECB is only OW-CPA, as Figure~\ref{fig:ecb-attacktable} says. 
     This is terrible!\\
     \begin{figure}[htp!]
     \centering
@@ -21,7 +21,7 @@
     \label{fig:ecb-attacktable}
     \end{figure}
     \\
-    The weakness of this mode lays in the fact that the blocks are encrypted independently. This is the basis for the two attacks below, but it also means it's susceptible to \textbf{block replay}. That is where an adversary edits a bit knowing how it will affect the decrypted message. If I knew you were sending me some money, and I knew the block containing the amount you were transferring, I could change that block in the hope I would end up with a larger transaction. This could be fixed with a checksum. ECB has one positive, an error in one block of the ciphertext will not propagate to other blocks during decryption.\\
+    The weakness of this mode lays in the fact that the blocks are encrypted independently. This is the basis for the two attacks below, but it also means it's susceptible to \textbf{block replay}. That is where an adversary edits a bit knowing how it will affect the decrypted message. If I knew you were sending me some money, and I knew the block containing the amount you were transferring, I could change that block in the hope I would end up with a larger transaction. This could be fixed with a checksum. ECB has one positive aspect though; an error in one block of the ciphertext will not propagate to other blocks during decryption or encryption.\\
     \\
     \textbf{Proving a cryptographic system passes a security model is beyond the scope of this course}, but you should be able to give an intuitive reason. It passes OW-CPA because, with only an encryption oracle, you would have to brute-force every possible message to match it with the ciphertext. We can always make $b$ large enough so that this is not possible\footnote{This might be possible if you knew the context of the message, if you understand what is being sent and the domain of possible values of a block is relatively small. This is simply poor implementation of the encryption, however, and we don't worry about that.}. Note that all the proofs for block cipher modes assume we are using a `perfect block cipher'.\\
     \\
@@ -172,7 +172,7 @@
 \section{AES --- Rijndael}
     Some ciphers involve repeating a weaker `round function' to make a stronger encryption. Round functions will output bit-strings the same size of the input, and they must be a revertible one-to-one function, so that we can decrypt the ciphertext. The notation usually uses $r$ for the number of rounds, $n$ for the block size and $s$ for the key size. Each round uses a different key, and these sub-keys are all derived from the main key. A block is usually represented as a matrix holding all the bytes. Each state of the encryption is applied to the `state matrix', $s$.\\
     \\
-    ASE is an encryption scheme which uses round functions. Its works on 128-bit blocks, uses keys of 128/192/256-bits and works on 10/12/14. Each round consists of the following operations:\\
+    AES is an encryption scheme which uses round functions. It works on 128-bit blocks, uses keys of 128/192/256-bits and works over 10/12/14 rounds. Each round consists of the following operations:\\
     \\
     \newcommand{\leftminipagewidth}{0.3\textwidth}
     \newcommand{\rightminipagewidth}{0.7\textwidth}
@@ -299,7 +299,7 @@
         \end{algorithm}
     \end{figure}
     \\
-    \textbf{Write section on Key Scheduling}\\
+    \textbf{TODO: Write section on Key Scheduling}\\
     \\
     Clearly we can't just use any S-Box, they have to not be susceptible to differential and linear analysis. It can be broken down into two sections:
     \begin{enumerate}

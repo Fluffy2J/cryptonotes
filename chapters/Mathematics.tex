@@ -5,11 +5,11 @@
 % Matt, you owe me a Freddo - Drum Ogilvie
     \section{Modular Arithmetic \& Groups}
     \subsection{Modular Arithmetic}
-    Modular arithmetic is a bit odd at first, but you get used to it. It's all about remainders, really; we express modular relations in the following form:
+    Modular arithmetic is a bit odd at first, but you get used to it. It's all about remainders, really; we express modular relations in the following form:\\
     \begin{figure}[htp!]
     \centering
         $$ X \equiv \textit{Y \emph{\textbf{MOD}} Z} $$
-    \end{figure}
+    \end{figure}\\
     Where $X$ is any old number and $Z$ is the `Modulus'. Y is the remainder of the integer division of $X$ by $Z$, the result of an operation expressed in many languages (including C) as $X \% Z$. Simples.\\
     \\
     When you are doing modulo maths in crypto, you only really need to remember 1 rule:
@@ -52,7 +52,7 @@
                     r_{k-2} = q_{k} \cdot r_{k-1} + r_{k}
                 $$
             \item Where $q_{k}$ is the quotient of the integer division $\frac{r_{k-2}}{r_{k-1}}$, and $r_{k}$ is the remainder.
-            \item Keep going until $r_{k} = 0$, at which point $r_{k-1}$ is the GCD. If $r_{k-1}$ is 1, then your original numbers are \textbf{co-prime}, meaning that they have no common factors.
+            \item Keep going until $r_{k} = 0$, at which point $r_{k-1}$ is the GCD. If $r_{k-1}$ is 1, then your original numbers are \textbf{co-prime} (aka \textbf{relatively prime} or \textbf{coprime}), meaning that they have no common factors.
         \end{itemize}
     
     \section{Euler Phi Function}
@@ -78,7 +78,7 @@
             $$ a^p \equiv a \mod p $$
         
     \section{Fields}
-        A field is a special variety of \textbf{ring}. 
+        A field is a special variety of \textbf{abelian ring}. Where a ring's second (multiplicative) operation doesn't need to have an inverse for every non-zero element, a field's does. 
     
     \section{Chinese Remainder Theorem}
         The Chinese Remainder Theorem, often written CRT, states that given a modulus $N$, made up of pairwise coprime factors $n_1$, ..., $n_r$, it is possible to calculate $x = y \mod N$ by instead calculating modulo its component parts, $n_1$, ..., $n_r$ and the combining those parts using some clever maths we'll get onto in a moment. This isn't particularly useful with small $N$, but you can imagine when your $N$ and $x$ are in the $2^{1024}$ range, and you're performing modular exponentiation it has some performance implications.\\
@@ -92,7 +92,7 @@
 
     
     \section{One Way Functions}
-        Firstly, lets define a function simply as something that for every item in set $X$ there is a mapping to set $Y$:
+        Firstly, lets define a function simply as something that, for items in set $X$, provides a mapping to items in set $Y$:
         $$f\colon X \rightarrow Y : x \mapsto y = f(x)$$
         Such a function is known as a \textbf{one way function} if, for all $x$, $f(x) = y$ is efficient to compute, while computing the $x$ that maps to $y$ is infeasible. When we say infeasible, we mean its so bloody hard it would essentially take, like, \textbf{forever}.\\
         \\
