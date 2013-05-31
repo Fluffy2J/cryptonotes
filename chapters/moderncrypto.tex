@@ -161,8 +161,8 @@ The idea behind a stream cipher is to replace the (possibly) huge cipher needed 
     \end{center}
 \end{figure}
 \\
-One model of a stream cipher is of a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
+One model of a stream cipher is a finite state machine, where the key provides the initial state, variables used to convert a keystream, $\csubk{i}$, to the next keystream, $\csubk{i+1}$. The ouput of the FSA is also XORed with a value taken from the key.\\
 \\
-One source for confusion may come from that fact that the slides use $\csubk{x}$ to for both the key values which are inputted into the stream cipher and for the keystream, which is the output of the stream cipher.\\
+One source for confusion may come from that fact that the slides use $\csubk{x}$ to mean both the key values which are input into the stream cipher, and for the keystream, which is the output of the stream cipher.\\
 \\
-Decryption is easy as both sender and receiver use key to generate the keystream of necessary size. This possible because the algorithm is deterministic, which, as meantioned later, is a source of weakness.
+Decryption is easy as both sender and receiver use one key to generate the keystream of necessary size. This is possible because the algorithm is deterministic, which, as mentioned later, is a source of weakness.
