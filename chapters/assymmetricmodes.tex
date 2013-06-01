@@ -177,7 +177,7 @@
 	$$
 		\red{m} \cong \blue{c_1}^{-\red{x}}\blue{c_2} \mod \blue{p}
 	$$
-	The proof that this decryption works is somewhat simpler than it was for ElGamal. Expand all ciphertexts to their definitions to see that $\blue{c_1} \cong \blue{g}^\red{k}$ and $\blue{c_2} \cong \red{m}\blue{g}^{\red{xk}}$, and note that
+	The proof that this decryption works is somewhat simpler than it was for RSA. Expand all ciphertexts to their definitions to see that $\blue{c_1} \cong \blue{g}^\red{k}$ and $\blue{c_2} \cong \red{m}\blue{g}^{\red{xk}}$, and note that
 	\begin{align*}
 		 \blue{c_1}^{-\red{x}}\blue{c_2}
 	&\cong (\blue{g}^\red{k})^{-\red{x}}\red{m}\blue{g}^\red{xk} \mod \blue{p} \\
@@ -201,7 +201,7 @@ QED\\
 \end{flushright}
 	ElGamal is IND-CPA secure under the assumption that the Decisional Diffie Hellman problem is hard.\\
 \\
-	Suppose there exists some IND-CPA adversary against ElGamal. Given only public information, this adversary can send us a pair of messages, we can ``encrypt" one under ElGamal, and it will tell us which one we have ``encrypted". This quote marks are necessary, since we won't be performaing standard ElGamal encryption. We will exploit this adversary by packaging up $g^x$, $g^y$ and $g^z$ in our challenge, and using the results to solve the Decisional Diffie Hellman problem for us.\\
+	Suppose there exists some IND-CPA adversary against ElGamal. Given only public information, this adversary can send us a pair of messages, we can ``encrypt" one under ElGamal, and it will tell us which one we have ``encrypted". This quote marks are necessary, since we won't be performing standard ElGamal encryption. We will exploit this adversary by packaging up $g^x$, $g^y$ and $g^z$ in our challenge, and using the results to solve the Decisional Diffie Hellman problem for us.\\
 \\
 	Start by sending a public key of $g^x$ to the adversary. When the adversary sends $m_0$ and $m_1$, return $c = (g^y, m_0g^z)$. This means that the $k$ chosen in ElGamal encryption is equal to $y$, and so for this ciphertext to correspond to $m_0$, it must also be the case that $z = xy$.\\
 \\
