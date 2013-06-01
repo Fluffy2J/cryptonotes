@@ -9,7 +9,7 @@
 	\textbf{Message + \textcolor{B}{Public Key} = Ciphertext}\\
 	\textbf{Ciphertext + \textcolor{R}{Private Key} = Message}\\
 
-	Throughout this chapter, you will see a lot of colours. If you see \textcolor{R}{red}, the highlighted symbols \textcolor{R}{private}, in that they are hidden from the adversary. If you see \textcolor{B}{blue}, the highlighted symbols are \textcolor{B}{public}, and visible to anyone and everyone.
+	Throughout this chapter, you will see a lot of colours. If you see \textcolor{R}{red}, the highlighted symbols are intended to be kept \textcolor{R}{private}, in that they are hidden from the adversary. If you see \textcolor{B}{blue}, the highlighted symbols are \textcolor{B}{public}, and visible to anyone and everyone. Whether \red{``private"} symbols are actually private in practice is often another matter entirely.
 
 \section{Vanilla RSA}
 
@@ -191,9 +191,9 @@
 \\
 	ElGamal is OW-CPA secure under the assumption that the Computational Diffie Hellman problem is hard.\\
 \\
-	Suppose there exists some adversary against ElGamal encryption. Given only public information, ie the domain parameters and a ciphertext, this adversary will recover the message within the cipher. We intend to exploit this adversary to solve the Computational Diffie Hellman problem, that is send it $g^x$ and $g^y$, and somehow recover $g^xy$.\\
+	Suppose there exists some adversary against ElGamal encryption. Given only public information, ie the domain parameters and a ciphertext, this adversary will recover the message within the cipher. We intend to exploit this adversary to solve the Computational Diffie Hellman problem, that is send it $\blue{g}^\red{x}$ and $\blue{g}^\red{y}$, and somehow recover $\blue{g}^\red{xy}$.\\
 \\
-	Let $h$, the public key, be equal to $g^x$. Choose $c_1 = g^y$ and $c_2 = 1$. This is entirely valid, since the oracle must account for whatever random number, $k$, the encryption process chooses. If $c_1 = g^y$, then it must be the case that $k=y$. If $c_2=1$, it must be the case that $mg^{xy} = 1$. Hence the oracle must return $m \cong g^{-xy} \mod p$. Finding the modular inverse of $m$ is certainly slow, but is not computationally hard, hence $m^{-1} \cong g^{xy} \mod p$, and we have easily solved the Computational Diffie Hellman problem.\\
+	Let $\blue{h}$, the public key, be equal to $\blue{g}^\red{x}$. Choose $\blue{c_1} = \blue{g}^\red{y}$ and $\blue{c_2} = 1$. This is entirely valid, since the oracle must account for whatever random number, $\red{k}$, the encryption process chooses. If $\blue{c_1} = \blue{g}^\red{y}$, then it must be the case that $\red{k}=\red{y}$. If $\blue{c_2}=1$, it must be the case that $\red{m}\blue{g}^{\red{xy}} = 1$. Hence the oracle must return $\red{m} \cong \blue{g}^{-\red{xy}} \mod \blue{p}$. Finding the modular inverse of $\red{m}$ is perhaps a little slow, but is not computationally hard, hence $\red{m}^{-1} \cong \blue{g}^{\red{xy}} \mod \blue{p}$, and we have easily solved the Computational Diffie Hellman problem.\\
 \\
 	This gives us a contradiction, since the Computational Diffie Hellman problem is hard, so the supposed OW-CPA adversary against ElGamal cannot exist.
 \begin{flushright}
@@ -201,17 +201,17 @@ QED\\
 \end{flushright}
 	ElGamal is IND-CPA secure under the assumption that the Decisional Diffie Hellman problem is hard.\\
 \\
-	Suppose there exists some IND-CPA adversary against ElGamal. Given only public information, this adversary can send us a pair of messages, we can ``encrypt" one under ElGamal, and it will tell us which one we have ``encrypted". This quote marks are necessary, since we won't be performaing standard ElGamal encryption. We will exploit this adversary by packaging up $g^x$, $g^y$ and $g^z$ in our challenge, and using the results to solve the Decisional Diffie Hellman problem for us.\\
+	Suppose there exists some IND-CPA adversary against ElGamal. Given only public information, this adversary can send us a pair of messages, we can ``encrypt" one under ElGamal, and it will tell us which one we have ``encrypted". This quote marks are necessary, since we won't be performaing standard ElGamal encryption. We will exploit this adversary by packaging up $\blue{g}^\red{x}$, $\blue{g}^\red{y}$ and $\blue{g}^\red{z}$ in our challenge, and using the results to solve the Decisional Diffie Hellman problem for us.\\
 \\
-	Start by sending a public key of $g^x$ to the adversary. When the adversary sends $m_0$ and $m_1$, return $c = (g^y, m_0g^z)$. This means that the $k$ chosen in ElGamal encryption is equal to $y$, and so for this ciphertext to correspond to $m_0$, it must also be the case that $z = xy$.\\
+	Start by sending a public key of $\blue{g}^\red{x}$ to the adversary. When the adversary sends $\red{m_0}$ and $\red{m_1}$, return $\blue{c} = (\blue{g}^\red{y}, \red{m_0}\blue{g}^\red{z})$. This means that the $\red{k}$ chosen in ElGamal encryption is equal to $\red{y}$, and so for this ciphertext to correspond to $\red{m_0}$, it must also be the case that $\red{z} = \red{xy}$.\\
 \\
-	If the adversary returns $b=0$, then this ciphertext must correspond to $m_0$, and so $z=xy$. If $z \neq xy$, there is no defined behavior for the adversary, but it cannot return $b=0$ since this would be incorrect. From this information, we can then easily solve an instance of the Decisional Diffie Hellman problem.\\
+	If the adversary returns $b=0$, then this ciphertext must correspond to $\red{m_0}$, and so $\red{z}=\red{xy}$. If $\red{z} \neq \red{xy}$, there is no defined behavior for the adversary, but it cannot return $b=0$ since this would be incorrect. From this information, we can then easily solve an instance of the Decisional Diffie Hellman problem.\\
 \\
 	This gives us a contradiction, since the Decisional Diffie Hellman problem is hard, so the supposed IND-CPA adversary against ElGamal cannot exist.
 \begin{flushright}
 QED\\
 \end{flushright}
-	ElGamal is not OW-CCA secure, since it is malleable. Given $c=(g^k,mh^k)$, we can compute $c'=(g^k,2mh^k) \neq c$. Sending $c'$ to the decryption oracle will yield $m' \cong 2m \mod p$. From here, $m$ is trivially recoverable.\\
+	ElGamal is not OW-CCA secure, since it is malleable. Given $\blue{c}=(\blue{g}^\red{k},\red{m}\blue{h}^\red{k})$, we can compute $\blue{c'}=(\blue{g}^\red{k},2\red{m}\blue{h}^\red{k}) \neq \blue{c}$. Sending $\blue{c'}$ to the decryption oracle will yield $m' \cong 2\red{m} \mod \blue{p}$. From here, $\red{m}$ is trivially recoverable.\\
 \\
 	In summary, ElGamal is secure against all CPAs, and against no CCAs.\\
 
