@@ -19,19 +19,30 @@
     This leads us nicely onto groups.
 
     \subsection{Groups}
-    A mathematical group is a combination of a set and an operation. So in our case, we use the set of remainders under some Modulus, defined thusly:
+    A mathematical group is a combination of a set and an operation, usually written $(G,*)$. We require three properties of this operation;
+	\begin{align*}
+		\mbox{Closure: } &\forall x,y \in G \quad x*y \in G\\
+		\mbox{Associativity: } &\forall x,y,z \in G \quad (x*y)*z = x*(y*z)\\
+		\mbox{Identity: } &\exists e \in G \; st \; \forall x \in G \quad e*x = x*e = x \\
+		\mbox{Invertability: } &\forall x \in G \; \exists x^{-1} \in G \;\; st \;\; x*x^{-1} = x^{-1} * x = e
+	\end{align*}
+	Most cryptographic constructions used here are defined on the group of non-zero integers modulo $N$ under modular multiplication, defined thusly:
     \begin{figure}[htp!]
-    $$
-        (\mathbb{Z}/N\mathbb{Z}) = \{0,..., N - 2, N - 1 \}
-    $$
+    \begin{align*}
+        \mathbb{Z}/N\mathbb{Z}^{*} &= \{1, 2, 3, ... , N-1\} \\
+        \forall x,y, \in \mathbb{Z}/N\mathbb{Z}^{*}& \quad x * y = xy \mod N
+    \end{align*}
     \end{figure}\\
-    And our operation is going to be multiplication. This is important because to be considered a `group', the operation (when used between members of the set) must be associative, have an identity that is in the group, and have an inverse for every element in the group (which must also be in the group). Capiche? Oh, and of course the group must be closed under that operation, so every result is also in the group.\\
-    \\
-    If we have the extra special benefit of commutativity then this is an `\textbf{Abelian Group}' (sometimes just called a `commutative group').
+    This is actually only a group if $N$ is prime. You should think about why $0$ is not a member of this group, and then why, if $N$ is not prime, this is not a well-defined group. We'll deal with this later when we talk about rings.\\
+\\
+	Whilst the only concrete we'll deal with here is $(\mathbb{Z}/N\mathbb{Z} , \cdot)$, other groups exist and are used in the real world, and cryptographic constructions and problems are often defined over a generic group, rather than over this specific one.\\
+\\
+	If we have the extra special benefit of commutativity in our operation, ie $x*y = y*x$, then this is an `\textbf{Abelian Group}' (sometimes just called a `commutative group').\\
+\\
+    Groups can sometimes be defined in terms of generators. We say that $g \in G$ is a generator for $(G,*)$ iff we can write $G = \{e,g,g^1,g^2,g^3,...\}$. This differs from the idea of a generating set which does not appear to be part of this course, but if you're interested, then we say that $S\subseteq G$ is a generating subset of $G$ iff $G$ can be expressed using only finite products of elements of $S$ and their inverses.
 
     \subsection{Rings}
-    In fact, we can have both the addition and multiplication operations with this set. Rather than defining two seperate groups, we combine the two into a new thing called a `ring'.
-    A ring in this context is a set with operations for addition and multiplication.\\
+    In fact, we can define both the addition and multiplication operations in \mathbb{Z}/N\mathbb{Z}. Rather than defining two seperate groups, we combine the two into a new thing called a `ring'. A ring in this context is a set with operations for addition and multiplication, with all the properties you might expect.\\
     \\
     It's like an abelian group with respect to addition, because addition is closed, associative, commutative, has an identity and a guaranteed inverse. Not only that, my mentally-endowed comrades, but it is like an abelian group for multiplication too, with the added awesome that multiplication is distributive over addition.\footnote{The minimal spec for a ring is an abelian group with a second associative binary operation that is distributive over the main group operation.}
 
