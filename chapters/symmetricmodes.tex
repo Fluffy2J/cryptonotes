@@ -170,7 +170,7 @@
         If function has a large enough bias (either positive or negative), then we can approximate the whole cipher as a linear function. Using this method we can prove that an S-Box is non-linear.
 
 \section{AES --- Rijndael}
-    Some ciphers involve repeating a weaker `round function' to make a stronger encryption. Round functions will output bit-strings the same size of the input, and they must be a revertible one-to-one function, so that we can decrypt the ciphertext. The notation usually uses $r$ for the number of rounds, $n$ for the block size and $s$ for the key size. Each round uses a different key, and these sub-keys are all derived from the main key. A block is usually represented as a matrix holding all the bytes. Each state of the encryption is applied to the `state matrix', $s$.\\
+    Some ciphers involve repeating a weaker `round function' to make a stronger encryption. Round functions will output bit-strings the same size as the input, and they must be a revertible one-to-one function, so that we can decrypt the ciphertext. The notation usually uses $r$ for the number of rounds, $n$ for the block size and $s$ for the key size. Each round uses a different key, and these sub-keys are all derived from the main key. A block is usually represented as a matrix holding all the bytes. Each state of the encryption is applied to the `state matrix', $s$.\\
     \\
     AES is an encryption scheme which uses round functions. It works on 128-bit blocks, uses keys of 128/192/256-bits and works over 10/12/14 rounds. Each round consists of the following operations:\\
     \\
