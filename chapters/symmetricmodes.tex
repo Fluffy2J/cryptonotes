@@ -173,7 +173,6 @@
     Some ciphers involve repeating a weaker `round function' to make a stronger encryption. Round functions will output bit-strings the same size as the input, and they must be a revertible one-to-one function, so that we can decrypt the ciphertext. The notation usually uses $r$ for the number of rounds, $n$ for the block size and $s$ for the key size. Each round uses a different key, and these sub-keys are all derived from the main key. A block is usually represented as a matrix holding all the bytes. Each state of the encryption is applied to the `state matrix', $s$.\\
     \\
     AES is an encryption scheme which uses round functions. It works on 128-bit blocks, uses keys of 128/192/256-bits and works over 10/12/14 rounds. Each round consists of the following operations:\\
-    \\
     \newcommand{\leftminipagewidth}{0.3\textwidth}
     \newcommand{\rightminipagewidth}{0.7\textwidth}
     \begin{tabular}{ll}
@@ -279,7 +278,7 @@
         \end{minipage}
 
     \end{tabular}\\\\
-    \footnotetext{The aim is to defuse the message as much as possible, so a maximal distance algorithm is used to find the matrix which will do this the most --- you don't need to worry about that though.}
+    \footnotetext{The aim is to diffuse the message as much as possible, so a maximal distance algorithm is used to find the matrix which will do this the most --- you don't need to worry about that though.}\\
     It's possible that you need to know they are put together in AES, so you can see the pseudo-code in Algorithm~\ref{alg:aes}. Basically, every round the sub-key is added, then the S-Box is applied, then the rows are shifted, then the columns are mixed. In the last round the columns aren't mixed though.\\
     \begin{figure}[htp!]
         \centering
@@ -299,9 +298,7 @@
         \end{algorithm}
     \end{figure}
     \\
-    \textbf{TODO: Write section on Key Scheduling}\\
-    \\
-    Clearly we can't just use any S-Box, they have to not be susceptible to differential and linear analysis. It can be broken down into two sections:
+    Clearly we can't just use any S-Box, they have to not be susceptible to differential and linear analysis. The S-Box used is known as the Rijndael S-Box. It can be broken down into two sections:
     \begin{enumerate}
         \item[a)] \textbf{Multiplicative Inverse}: Remember the multiplicative inverse, $x^{-1}$, of $x$ is the number in the finite space for which $x\cdot x^{-1}=1$. So in this context, we want $x\cdot x^{-1} \mod 2^8 = 1$. It must equal 1 because 1 is the identity number for multiplication ($x\cdot I=x$). We count zeros inverse as zero.
         \item[b)] \textbf{Linear map} over $\mathbb{F}_2$, which just means its XORed with a bit-string.
@@ -330,8 +327,18 @@
         \begin{pmatrix}
             1\\1\\0\\0\\0\\1\\1\\0
         \end{pmatrix}
-    \end{equation}
-    
+    \end{equation}\\
+    \textbf{Rijndael's Key Schedule}\\
+    The key schedule is the mechanism used to `expand' the 128-bit key into 10 128-bit keys\footnote{The number of rounds is linked t the key length, it is only 10 rounds for 128-bit keys.}. The first round's key is simply the original key. For the rest, the process is as follows (for the $i$'th round):
+    \begin{enumerate}
+        \item Copy the $i-1$'th round's output into a temporary variable $t$.
+        \item Bitwise rotate $t$ left by 1 byte.
+        \item Apply the S-Box to each byte of $t$.
+        \item XOR the \textbf{first byte only}, with the output of $rcon[i]$.
+    \end{enumerate}
+    So, what's Rcon I hear you cry? Never fear, I shall explain, though Martijn's slide gloss over this so if you're struggling to remember things as it is \textbf{just remember the above}. The Rcon function is simply defined as the following operation in the Rijndael finite field:
+    $$ rcon(i) = x^{i-1} $$
+    So this is in effect, another S-Box! Just as with the AES S-Box, we simply use it like a lookup table, hence the square bracket notation in the algorithm.
     \subsection{Why?}
     
 \section{Message Authentication}
