@@ -336,8 +336,8 @@
     
 \section{Message Authentication}
     \subsection{Why Do This}
-        Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce.
-        It comes with two flavours that are used for different things: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will mainly worry about \textbf{MAC} stuff.
+        Encrypting data provides confidentiality (remember the three goals), but does not provide authenticity or integrity without additional sauce. This is the additional sauce that provides \textbf{integrity}.
+        It comes with two flavours: \textbf{MDC} (Manipulation Detection Codes) and \textbf{MAC} (Message Authentication Codes). We will mainly worry about \textbf{MAC} stuff.
         The reason we use these at all is that they are the secret ingredient in getting from IND-CPA to the mythical, coveted IND-CCA level of security.
 
 
